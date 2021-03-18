@@ -1,0 +1,89 @@
+#include<bits/stdc++.h>
+using namespace std;
+#define ll long long
+#define MOD 1000000007
+#define fi first
+#define se second
+#define rep(i,n) for(ll i = 0 ; i < n ; i++)
+#define repe(i,n) for(ll i = 0 ; i <= n ; i++)
+#define repb(i,a,b) for(ll i = a ; i < b ; i++)
+#define repeb(i,a,b) for(ll i = a ; i <= b ; i++)
+#define rfor(i,n,a) for(ll i = n ; i >= a ; i--)
+#define pb push_back
+#define endl "\n"
+#define vi vector<ll>
+#define vvi vector<vi>
+#define pii pair <ll,ll>
+#define fastio ios_base::sync_with_stdio(false);cin.tie(NULL)
+#define p0(a) cout << a << " "
+#define p1(a) cout << a << endl
+#define p2(a,b) cout << a << " " << b << endl
+#define w(x) ll x; cin>>x; while(x--)
+
+    template <typename T1, typename T2>
+    inline std::ostream& operator << (std::ostream& os, const std::pair<T1, T2>& p)
+    {
+        return os << "(" << p.first << ", " << p.second << ")";
+    }
+ 
+    template<typename T>
+    inline std::ostream &operator << (std::ostream & os,const std::vector<T>& v)
+    {
+        bool first = true;
+        os << "[";
+        for(unsigned int i = 0; i < v.size(); i++)
+        {
+            if(!first)
+                os << ", ";
+            os << v[i];
+            first = false;
+        }
+        return os << "]";
+    }
+    
+/*-------------------------------------------------*/
+
+// read once, read again, think, code
+
+bool comp(pii &a, pii &b) {
+	return a.fi < b.fi;
+}
+
+ll solve() {
+
+    ll n, a, b;
+    cin >> n;
+
+    vector<pii> st, en;
+
+    rep(i,n) {
+    	cin >> a >> b;
+    	st.pb({a,i});
+    	en.pb({b,i});
+    }
+
+    sort(st.begin(), st.end(), comp);
+    sort(en.begin(), en.end(), comp);
+
+    if(st[0].se != en[0].se) {
+    	return max(st[0].fi, en[0].fi); 
+    } else {
+    	return min(st[0].fi+en[0].fi, min(max(st[0].fi,en[1].fi), max(st[1].fi,en[0].fi)));
+    }
+}
+
+
+int main()
+{
+	fastio;
+
+    #ifndef ONLINE_JUDGE
+        freopen("input.txt","r",stdin);
+        freopen("output.txt","w",stdout);
+    #endif
+
+    //w(tc)
+    	p1(solve());
+	
+	return 0;
+}
