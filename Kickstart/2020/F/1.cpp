@@ -1,0 +1,134 @@
+#include<bits/stdc++.h>
+using namespace std;
+#define ll long long
+#define ld long double
+#define MOD 1000000007
+#define fi first
+#define se second
+#define rep(i,n) for(ll i = 0 ; i < n ; i++)
+#define repe(i,n) for(ll i = 0 ; i <= n ; i++)
+#define repb(i,a,b) for(ll i = a ; i < b ; i++)
+#define repeb(i,a,b) for(ll i = a ; i <= b ; i++)
+#define rfor(i,n,a) for(ll i = n ; i >= a ; i--)
+#define pb push_back
+#define popb pop_back()
+#define endl "\n"
+#define vi vector<ll>
+#define vb vector<bool>
+#define vvi vector<vi>
+#define pii pair < long long, long long >
+typedef priority_queue<ll, vector<ll>, greater<ll>> minheap;
+typedef priority_queue<ll> maxheap;
+#define fastio ios_base::sync_with_stdio(false);cin.tie(NULL)
+#define p0(a) cout << a << " "
+#define p1(a) cout << a << endl
+#define p2(a,b) cout << a << " " << b << endl
+#define p3(a,b,c) cout << a << " " << b << " " << c << endl
+#define p4(a,b,c,d) cout << a << " " << b << " " << c << " " << d << endl
+#define sortv(v) sort(v.begin(),v.end())
+#define rsortv(v) sort(v.begin(),v.end(), greater<>());
+#define w(x)  ll x; cin>>x; while(x--)
+
+    template <typename T1, typename T2>
+    inline std::ostream& operator << (std::ostream& os, const std::pair<T1, T2>& p)
+    {
+        return os << "(" << p.first << ", " << p.second << ")";
+    }
+ 
+    template<typename T>
+    inline std::ostream &operator << (std::ostream & os,const std::vector<T>& v)
+    {
+        bool first = true;
+        os << "[";
+        for(unsigned int i = 0; i < v.size(); i++)
+        {
+            if(!first)
+                os << ", ";
+            os << v[i];
+            first = false;
+        }
+        return os << "]";
+    }
+ 
+    template<typename T>
+    inline std::ostream &operator << (std::ostream & os,const std::set<T>& v)
+    {
+        bool first = true;
+        os << "[";
+        for (typename std::set<T>::const_iterator iii = v.begin(); iii != v.end(); ++iii)
+        {
+            if(!first)
+                os << ", ";
+            os << *iii;
+            first = false;
+        }
+        return os << "]";
+    }
+ 
+    template<typename T1, typename T2>
+    inline std::ostream &operator << (std::ostream & os,const std::map<T1, T2>& v)
+    {
+        bool first = true;
+        os << "[";
+        for (typename std::map<T1, T2>::const_iterator iii = v.begin(); iii != v.end(); ++iii)
+        {
+            if(!first)
+                os << ", ";
+            os << *iii ;
+            first = false;
+        }
+        return os << "]";
+    }
+
+int dr4[] = {0,1,0,-1}, dc4[] = {1,0,-1,0};
+int dr8[] = {0,1,1,1,0,-1,-1,-1}, dc8[] = {1,1,0,-1,-1,-1,0,1};
+
+/*-------------------------------------------------*/
+
+// read once, read again, think, code
+
+void cases(int tc) {
+	cout << "Case #" << tc << ": ";
+}
+
+void solve(int tc) {
+
+	ll n, x, num;
+	cin >> n >> x;
+	map<ll,vi> m;
+	rep(i,n) {
+		cin >> num;
+		m[(num-1)/x].pb(i+1);
+	}
+
+	vi ans;
+
+	for(auto &it : m) {
+		for(auto &ele : it.se) {
+			ans.pb(ele);
+		}
+	}
+	
+    cases(tc);
+    for(auto &ele : ans) p0(ele);
+    p1("");
+}
+
+int main()
+{
+	fastio;
+
+    #ifndef ONLINE_JUDGE
+        freopen("/home/devang/input.txt","r",stdin);
+        freopen("/home/devang/output.txt","w",stdout);
+    #endif
+
+	int tc,x = 1;
+	cin >> tc;
+
+	while(tc--)	{
+		solve(x++);
+	}
+
+	return 0;
+}

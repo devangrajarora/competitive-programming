@@ -114,47 +114,45 @@ bool check(ll num) {
 	return true;
 }
 
-void solve(int tc) {
+ll boringNumbersLessThan(ll n) {
 
-	ll l, r, ans = 0;
-	cin >> l >> r;
-
-	ll newL = l + (10-(l%10)), newR = (r/10)*10;
-	if(l%10==0) newL -= 10;
-
-	repb(i,l,newL) ans += check(i);
-	rfor(i,r,newR+1) ans += check(i);
-
-	ll curr = newL;
-
-	while(curr < newR) {
+	ll curr = 0, ans = 0;
+	while(curr <= n) {
 		
-		if(newR - curr >= 1000000) {
+		if(n - curr >= 1000000) {
 			ans += 390625;
 			curr += 1000000;
-		} else if(newR - curr >= 100000) {
+		} else if(n - curr >= 100000) {
 			ans += 78125;
 			curr += 100000;
-		} else if(newR - curr >= 10000) {
+		} else if(n - curr >= 10000) {
 			ans += 3125;
 			curr += 10000;
-		} else if(newR - curr >= 1000) {
+		} else if(n - curr >= 1000) {
 			ans += 625;
 			curr += 1000;
-		} else if(newR - curr >= 100) {
+		} else if(n - curr >= 100) {
 			ans += 25;
 			curr += 100;
-		} else if(newR - curr >= 10) {
+		} else if(n - curr >= 10) {
 			ans += 5;
 			curr += 10;
-		} else if(newR - curr >= 1) {
-			ans += 0;
+		} else if(n - curr >= 0) {
+			// p1(curr);
+			ans += check(curr);
 			curr += 1;
-		}
-
+		} 
 	}
 
-	ans += check(newR);
+	return ans;
+}
+
+void solve(int tc) {
+
+	ll l, r;
+	cin >> l >> r;
+	
+	ll ans = boringNumbersLessThan(l) ;
 
 	// p2(newL, newR);
 	cases(tc);
@@ -167,8 +165,8 @@ int main()
 	fastio;
 
     #ifndef ONLINE_JUDGE
-        freopen("input.txt","r",stdin);
-        // freopen("output.txt","w",stdin);
+        freopen("/home/devang/input.txt","r",stdin);
+        freopen("/home/devang/output.txt","w",stdout);
     #endif
 
 	int tc,x = 1;
