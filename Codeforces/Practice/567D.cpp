@@ -1,6 +1,7 @@
 #include<bits/stdc++.h>
 using namespace std;
 #define ll long long
+#define ld long double
 #define MOD 1000000007
 #define fi first
 #define se second
@@ -18,7 +19,7 @@ using namespace std;
 #define p0(a) cout << a << " "
 #define p1(a) cout << a << endl
 #define p2(a,b) cout << a << " " << b << endl
-#define watch(x) cout << (#x) << " is " << (x) << endl
+#define watch(x) cout <<  "\n" << (#x) << " is " << (x) << endl
 #define w(x) ll x; cin>>x; while(x--)
 
     template <typename T1, typename T2>
@@ -41,33 +42,55 @@ using namespace std;
         }
         return os << "]";
     }
+
+    template<typename T>
+    inline std::ostream &operator << (std::ostream & os,const std::set<T>& v)
+    {
+        bool first = true;
+        os << "[";
+        for (typename std::set<T>::const_iterator iii = v.begin(); iii != v.end(); ++iii)
+        {
+            if(!first)
+                os << ", ";
+            os << *iii;
+            first = false;
+        }
+        return os << "]";
+    }
     
 /*-------------------------------------------------*/
 
 // read once, read again, think, code
 
-#define vb vector<bool>
+#define MAXM 200001
+// #define MAXM 12
+
+multiset<ll> points;
+ll n,k,a,m;
 
 void solve() {
 
-    ll n, k; cin >> n >> k;
-    vi options(n);
-    rep(i,n) cin >> options[i];
+    cin >> n >> k >> a >> m;
+    ll cnt = (n+1)/(a+1), pt;
+    points.insert(0);
+    points.insert(n+1);
 
-    // winningPosition[i] = true if first player can win with i stones
+    rep(i,m) {
+    	cin >> pt;
 
-    vb winningPosition(k+1,false);
-
-    repeb(stones,0,k) {
-    	for(ll option : options) {
-    		if(option <= stones and !winningPosition[stones-option]) {
-    			winningPosition[stones] = true;
-    		}
-    	}
+        auto end = points.lower_bound(pt);
+    	auto st = prev(end);
+        cnt -= (*end-*st)/(a+1);
+        cnt += (*end-pt)/(a+1);
+    	cnt += (pt-*st)/(a+1);
+        points.insert(pt);
+        if(cnt < k) {
+            p1(i+1); return;
+        }
     }
-
-    (winningPosition[k]) ? p1("First") : p1("Second");
+    p1(-1);
 }
+
 
 int main()
 {
@@ -78,6 +101,8 @@ int main()
         freopen("/home/devang/output.txt","w",stdout);
     #endif
 
-    solve();
+    //w(tc)
+    	solve();
+	
 	return 0;
 }

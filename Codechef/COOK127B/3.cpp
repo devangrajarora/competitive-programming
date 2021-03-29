@@ -46,28 +46,43 @@ using namespace std;
 
 // read once, read again, think, code
 
-#define vb vector<bool>
-
 void solve() {
 
-    ll n, k; cin >> n >> k;
-    vi options(n);
-    rep(i,n) cin >> options[i];
-
-    // winningPosition[i] = true if first player can win with i stones
-
-    vb winningPosition(k+1,false);
-
-    repeb(stones,0,k) {
-    	for(ll option : options) {
-    		if(option <= stones and !winningPosition[stones-option]) {
-    			winningPosition[stones] = true;
-    		}
-    	}
+    ll n,k, sum = 0, onesHere = 0, minOnes = INT_MAX;
+    cin >> n >> k;
+    vi a(n);
+    rep(i,n) {
+    	cin >> a[i];
+    	if(i < k) onesHere += a[i];
+    	sum += a[i];
     }
 
-    (winningPosition[k]) ? p1("First") : p1("Second");
+    if(k == 1) {
+    	p1(sum);
+    	return;
+    }
+
+    if(k == n) {
+    	p1((sum*(sum+1))/2);
+    	return;
+    }
+
+    // watch(interval);
+
+    ll l = 1, r = k;
+    minOnes = onesHere;
+    while(r < n) {
+    	onesHere -= a[l-1];
+    	onesHere += a[r];
+    	if(onesHere < minOnes) minOnes = onesHere;
+    	l++, r++;
+    }
+
+    ll ans = (minOnes * (minOnes+1)) / 2;
+    ans += (sum - minOnes);
+    p1(ans);
 }
+
 
 int main()
 {
@@ -78,6 +93,8 @@ int main()
         freopen("/home/devang/output.txt","w",stdout);
     #endif
 
-    solve();
+    w(tc)
+    	solve();
+	
 	return 0;
 }

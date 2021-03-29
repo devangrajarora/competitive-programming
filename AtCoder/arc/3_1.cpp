@@ -1,7 +1,7 @@
 #include<bits/stdc++.h>
 using namespace std;
 #define ll long long
-#define MOD 1000000007
+#define MOD 998244353
 #define fi first
 #define se second
 #define rep(i,n) for(ll i = 0 ; i < n ; i++)
@@ -11,7 +11,7 @@ using namespace std;
 #define rfor(i,n,a) for(ll i = n ; i >= a ; i--)
 #define pb push_back
 #define endl "\n"
-#define vi vector<ll>
+#define vi vector<int>
 #define vvi vector<vi>
 #define pii pair <ll,ll>
 #define fastio ios_base::sync_with_stdio(false);cin.tie(NULL)
@@ -46,28 +46,63 @@ using namespace std;
 
 // read once, read again, think, code
 
-#define vb vector<bool>
+
+// int func(int st, int n, vi &mem) {
+
+// 	int ans = 0;
+// 	if(st == -1) {
+// 		repeb(i,1,m) {
+// 			mem.pb(i);
+// 			ans = ans + func(i,n-1,mem);
+// 			mem.pop_back();
+// 		}
+// 		return ans;
+// 	}
+
+// 	if(st > m) return 0;
+// 	// p2(st,n);
+// 	if(n == 0) {
+// 		p1(mem);
+// 		return 1;
+// 	}
+// 	if(dp[n] != -1) return dp[n];
+// 	int i = 1;
+// 	while(st*i <= m) {
+// 		mem.pb(st*i);
+// 		ans = (ans + func(st*i,n-1,mem)) % MOD;
+// 		i++;
+// 		mem.pop_back();
+// 	}
+// 	dp[n] = ans;
+// 	return dp[n];
+// }
 
 void solve() {
 
-    ll n, k; cin >> n >> k;
-    vi options(n);
-    rep(i,n) cin >> options[i];
+    int n,m; cin >> n >> m;
+    vi dp(m+1,1), dp(m+1,0);
+    int sum = m;
 
-    // winningPosition[i] = true if first player can win with i stones
+    rfor(i,n,0) {
+    	// vi dp1(m+1,0);
+    	dp1[1] = sum;
+    	// sum;
 
-    vb winningPosition(k+1,false);
-
-    repeb(stones,0,k) {
-    	for(ll option : options) {
-    		if(option <= stones and !winningPosition[stones-option]) {
-    			winningPosition[stones] = true;
-    		}
-    	}
+    	for(int num = 2 ; num <= m/2+1 ; num++) {
+	    	for(int j = 1 ; j*num <= m ; j++) {
+	    		dp1[num] = (dp1[num] + dp[num*j]) % MOD;
+	    	}
+	    	
+	    	sum = (sum + dp1[num]) % MOD;
+	    } 
+	    //p2(i,dp);
+	    if(i > 0)
+	    	repeb(j,1,m) dp[j] = dp1[j];
     }
 
-    (winningPosition[k]) ? p1("First") : p1("Second");
+    p1(dp[1]);
 }
+
 
 int main()
 {
@@ -78,6 +113,8 @@ int main()
         freopen("/home/devang/output.txt","w",stdout);
     #endif
 
-    solve();
+    //w(tc)
+    	solve();
+	
 	return 0;
 }

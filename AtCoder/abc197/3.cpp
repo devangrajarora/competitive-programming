@@ -46,28 +46,38 @@ using namespace std;
 
 // read once, read again, think, code
 
-#define vb vector<bool>
+ll n;
+
+void backtrack(vi &a, ll curr, ll idx, ll &ans, vi &ors) {
+
+	if(idx == n) {
+		ll currAns = 0;
+		ors.pb(curr);
+		// p1(ors);
+		if(ors.size() == 0) return;
+		for(auto num : ors) currAns ^= num;
+		ans = min(ans,currAns);
+		ors.pop_back();
+		return;
+	}
+
+	curr |= a[idx];
+	ors.pb(curr);
+	backtrack(a,0,idx+1,ans,ors);
+	ors.pop_back();
+	backtrack(a,curr,idx+1,ans,ors);
+}
 
 void solve() {
 
-    ll n, k; cin >> n >> k;
-    vi options(n);
-    rep(i,n) cin >> options[i];
-
-    // winningPosition[i] = true if first player can win with i stones
-
-    vb winningPosition(k+1,false);
-
-    repeb(stones,0,k) {
-    	for(ll option : options) {
-    		if(option <= stones and !winningPosition[stones-option]) {
-    			winningPosition[stones] = true;
-    		}
-    	}
-    }
-
-    (winningPosition[k]) ? p1("First") : p1("Second");
+    ll ans = INT_MAX; cin >> n;
+    vi a(n);
+    vi ors;
+    rep(i,n) cin >> a[i];
+    backtrack(a,0,0,ans,ors);
+    p1(ans);
 }
+
 
 int main()
 {
@@ -78,6 +88,8 @@ int main()
         freopen("/home/devang/output.txt","w",stdout);
     #endif
 
-    solve();
+    //w(tc)
+    	solve();
+	
 	return 0;
 }

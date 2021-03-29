@@ -46,28 +46,43 @@ using namespace std;
 
 // read once, read again, think, code
 
-#define vb vector<bool>
+bool comp(pii &a, pii &b) {
+	return (a.se != b.se) ? a.se < b.se : a.fi < b.fi;
+}
 
 void solve() {
 
-    ll n, k; cin >> n >> k;
-    vi options(n);
-    rep(i,n) cin >> options[i];
-
-    // winningPosition[i] = true if first player can win with i stones
-
-    vb winningPosition(k+1,false);
-
-    repeb(stones,0,k) {
-    	for(ll option : options) {
-    		if(option <= stones and !winningPosition[stones-option]) {
-    			winningPosition[stones] = true;
-    		}
-    	}
+    vector<pii> pos, neg;
+    ll n, xi, ci; cin >> n;
+    rep(i,n)  {
+    	cin >> xi >> ci;
+    	if(xi < 0) neg.pb({abs(xi), ci});
+    	else pos.pb({xi, ci});
     }
 
-    (winningPosition[k]) ? p1("First") : p1("Second");
+    sort(pos.begin(), pos.end(), comp);
+    sort(neg.begin(), neg.end(), comp);
+
+    // p1(pos);
+    // p1(neg);
+
+    ll ans = 0, curr = 0;
+    for(auto it : pos) {
+    	ans += abs(it.fi - curr);
+    	p2(it,ans);
+    	curr = it.fi;
+    }
+    ans += curr;
+    curr = 0;
+    for(auto it : neg) {
+    	ans += abs(it.fi - curr);
+    	curr = it.fi;
+    }
+
+    ans += abs(curr);
+    p1(ans);
 }
+
 
 int main()
 {
@@ -78,6 +93,8 @@ int main()
         freopen("/home/devang/output.txt","w",stdout);
     #endif
 
-    solve();
+    //w(tc)
+    	solve();
+	
 	return 0;
 }

@@ -46,28 +46,23 @@ using namespace std;
 
 // read once, read again, think, code
 
-#define vb vector<bool>
-
 void solve() {
 
-    ll n, k; cin >> n >> k;
-    vi options(n);
-    rep(i,n) cin >> options[i];
+    ll ans = 1, res = 0;
 
-    // winningPosition[i] = true if first player can win with i stones
-
-    vb winningPosition(k+1,false);
-
-    repeb(stones,0,k) {
-    	for(ll option : options) {
-    		if(option <= stones and !winningPosition[stones-option]) {
-    			winningPosition[stones] = true;
-    		}
-    	}
+    while(res == 0) {
+    	p1((ans * ans));
+    	cin.clear();
+		fflush(stdin);
+		fflush(stdout);
+    	ans++;
+    	// fflush(stdin);
+    	cin >> res;
+    	if(res == 1) break;
+    	if(res == -1) exit(0);
     }
-
-    (winningPosition[k]) ? p1("First") : p1("Second");
 }
+
 
 int main()
 {
@@ -78,6 +73,8 @@ int main()
         freopen("/home/devang/output.txt","w",stdout);
     #endif
 
-    solve();
+    w(tc)
+    	solve();
+	
 	return 0;
 }

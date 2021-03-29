@@ -1,6 +1,7 @@
 #include<bits/stdc++.h>
 using namespace std;
 #define ll long long
+#define ld long double
 #define MOD 1000000007
 #define fi first
 #define se second
@@ -45,29 +46,30 @@ using namespace std;
 /*-------------------------------------------------*/
 
 // read once, read again, think, code
-
-#define vb vector<bool>
+#define PI 3.14159265
 
 void solve() {
 
-    ll n, k; cin >> n >> k;
-    vi options(n);
-    rep(i,n) cin >> options[i];
+	ll n; cin >> n;
+	ld x0, y0, xOpp, yOpp; cin >> x0 >> y0 >> xOpp >> yOpp;
+	ll um = (xOpp-x0) * (xOpp-x0) + (yOpp-y0) * (yOpp-y0); 
+	ld oppDist = sqrt(um);
+	ll sumOfAngles = (n-2) * 180;
+	ld angle = sumOfAngles*1.0 / n;
+	// p2(oppDist,angle);
+	ld halfAngle = angle/2, halfDist = oppDist/2;
+	ld side = 2*halfDist*cos(halfAngle*PI/180.0);
 
-    // winningPosition[i] = true if first player can win with i stones
+	// ld y = side * sin(halfAngle*PI/180.0);
+	// ld x = side * cos(halfAngle*PI/180.0);
 
-    vb winningPosition(k+1,false);
-
-    repeb(stones,0,k) {
-    	for(ll option : options) {
-    		if(option <= stones and !winningPosition[stones-option]) {
-    			winningPosition[stones] = true;
-    		}
-    	}
-    }
-
-    (winningPosition[k]) ? p1("First") : p1("Second");
+	ld AB = halfDist, AC = side, BC = halfDist;
+	ld cy = ((AB*AB) + (AC*AC) - (BC*BC)) / (2 * AB);
+	ld cx = sqrt(AC*AC - cy*cy);
+	ld cx
+	p2(cx, cy);
 }
+
 
 int main()
 {
@@ -78,6 +80,8 @@ int main()
         freopen("/home/devang/output.txt","w",stdout);
     #endif
 
-    solve();
+    //w(tc)
+    	solve();
+	
 	return 0;
 }

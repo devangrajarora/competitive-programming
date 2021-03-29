@@ -46,28 +46,48 @@ using namespace std;
 
 // read once, read again, think, code
 
-#define vb vector<bool>
+#define MAXM 500001
+ll fac[MAXM];
+
+void precompute() {
+	fac[0] = fac[1] = 1;
+	repeb(i,1,MAXM) fac[i] = (i * fac[i-1]) % MOD;
+} 
 
 void solve() {
 
-    ll n, k; cin >> n >> k;
-    vi options(n);
-    rep(i,n) cin >> options[i];
+	ll n, k, u, v; 
+	cin >> n >> k;
+    vi adj[n+1];
+    vi connections(n+1,0);
+    rep(i,n-1) {
+    	cin >> u >> v;
+    	connections[u]++;
+    	connections[v]++;
+    	adj[u].pb(v);
+    	adj[v].pb(u);
+    }
 
-    // winningPosition[i] = true if first player can win with i stones
-
-    vb winningPosition(k+1,false);
-
-    repeb(stones,0,k) {
-    	for(ll option : options) {
-    		if(option <= stones and !winningPosition[stones-option]) {
-    			winningPosition[stones] = true;
-    		}
+    ll mx = 0, mxFac = 1, mxIdx = -1, prodFac = 1;
+    // p1(connections);
+    rfor(i,n,1) {
+    	if(mx < connections[i]) {
+    		mx = connections[i], mxIdx = i;
     	}
     }
 
-    (winningPosition[k]) ? p1("First") : p1("Second");
+
+    ll ans = 1;
+    rfor(i,n,1) {
+    	if(i == mxIdx) ans = (ans * fac[connections[i]]) % MOD;
+    	else if(find(adj[mxIdx].begin(),adj[mxIdx].end(),i) != adj[mxIdx].end()) ans = (ans * (fac[connections[i]-1])) % MOD;
+    	else ans = (ans * fac[connections[i]]) % MOD;
+    }
+
+    // p1(mx);
+    p2(ans, mxIdx);
 }
+
 
 int main()
 {
@@ -78,6 +98,10 @@ int main()
         freopen("/home/devang/output.txt","w",stdout);
     #endif
 
-    solve();
+    precompute();
+
+    w(tc)
+    	solve();
+	
 	return 0;
 }

@@ -1,6 +1,7 @@
 #include<bits/stdc++.h>
 using namespace std;
 #define ll long long
+#define ld long double
 #define MOD 1000000007
 #define fi first
 #define se second
@@ -46,28 +47,27 @@ using namespace std;
 
 // read once, read again, think, code
 
-#define vb vector<bool>
-
 void solve() {
 
-    ll n, k; cin >> n >> k;
-    vi options(n);
-    rep(i,n) cin >> options[i];
+	ll n = 600851475143, i = 2, ans = 0;
+    ld SQRT = sqrt(n);
 
-    // winningPosition[i] = true if first player can win with i stones
-
-    vb winningPosition(k+1,false);
-
-    repeb(stones,0,k) {
-    	for(ll option : options) {
-    		if(option <= stones and !winningPosition[stones-option]) {
-    			winningPosition[stones] = true;
-    		}
-    	}
+    while(n%2==0) {
+        ans = 2;
+        n /= 2;
     }
 
-    (winningPosition[k]) ? p1("First") : p1("Second");
+    for(ll i = 3 ; i <= SQRT ; i += 2) {
+        if(n%i==0) {
+            ans = i;
+            while(n%i==0) n /= i;
+        }
+    }
+    
+    if(n > 1) ans = n;
+    p1(ans);
 }
+
 
 int main()
 {
@@ -78,6 +78,8 @@ int main()
         freopen("/home/devang/output.txt","w",stdout);
     #endif
 
-    solve();
+    //w(tc)
+    	solve();
+	
 	return 0;
 }
