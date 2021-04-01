@@ -22,53 +22,19 @@ using namespace std;
 
 void solve() {
 
-    string s;
-    cin >> s;
-    int n = s.size();
-    rep(i,0,n-1) {
-    	if(s[i] == '0') {p1("YES"); p1("0"); return;}
-    	if(s[i] == '8') {p1("YES"); p1("8"); return;}
-    }
-
-    if(n <= 2) {
-    	int num = stoi(s);
-    	if(num%8==0) {
-    		p1("YES"); p1(s); return;
-    	} else {
-    		p1("NO"); return;
-    	}
-    }
-
-    rep(i,0,n-2) {
-    	rep(j,i+1,n-1) {
-			int num = (s[i]-'0')*10 + (s[j]-'0');
-			if(num%8==0) {
-				string ans = to_string(num);
-				p1("YES"); p1(ans); return;
-			}
-		}
-    	
-    }
-
-    rep(i,0,n-3) {
-    	rep(j,i+1,n-2) {
-    		rep(k,j+1,n-1) {
-    			int num = (s[i]-'0')*100 + (s[j]-'0')*10 + (s[k]-'0');
-    			if(num%8==0) {
-    				string ans = s.substr(0,i) + to_string(num);
-    				p1("YES"); p1(ans); return;
-    			}
-    		}
-    	}
-    }
-
-    p1("NO");
-}	
+	string s;
+	getline(cin, s); 
+	while(!s.empty()) {
+		p1("NO");
+		fflush(stdout);
+		getline(cin, s);
+	}
+}
 
 
 int main()
 {
-	fastio;
+	// fastio;
 
     #ifndef ONLINE_JUDGE
         freopen("/home/devang/input.txt","r",stdin);

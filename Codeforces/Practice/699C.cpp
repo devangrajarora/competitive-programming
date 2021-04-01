@@ -47,23 +47,25 @@ using namespace std;
 
 // read once, read again, think, code
 
-bool solve() {
+#define INF 1000
 
-    string s; cin >> s;
-    int n = s.size();
-    vi cnt1(n,0), cnt2(n,0);
+void solve() {
 
-    rfor(i,n-2,0) {
-		cnt1[i] = cnt1[i+1] + (s[i] == 'B' and s[i+1] == 'A');
-		cnt2[i] = cnt2[i+1] + (s[i] == 'A' and s[i+1] == 'B');
+    ll n; cin >> n;
+    vi a(n);
+    repe(i,n) cin >> a[i];
+    ll prevRest = 0, prevGym = 0, prevContest = 0;
+
+    rep(i,n) {
+    	bool gymOpen = (a[i] >> 1) & 1, contestHappens = a[i] & 1;
+    	ll newRest = 1 + min({prevContest, prevGym, prevRest});
+    	ll newGym = (gymOpen) ? min(prevContest, prevRest) : INF;
+    	ll newContest = (contestHappens) ? min(prevGym, prevRest) : INF;
+
+    	prevRest = newRest, prevGym = newGym, prevContest = newContest;
     }
 
-    rep(i,n-2) {
-    	if(s.substr(i,2) == "AB" and cnt1[i+2] > 0) return 1; 
-    	if(s.substr(i,2) == "BA" and cnt2[i+2] > 0) return 1; 
-    }
-
-    return 0;
+    p1(min({prevContest, prevRest, prevGym}));
 }
 
 
@@ -77,7 +79,7 @@ int main()
     #endif
 
     //w(tc)
-    (solve()) ? p1("YES") : p1("NO");
+    	solve();
 	
 	return 0;
 }

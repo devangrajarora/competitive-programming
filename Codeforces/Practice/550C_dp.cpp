@@ -47,23 +47,62 @@ using namespace std;
 
 // read once, read again, think, code
 
-bool solve() {
+#define vb vector<bool>
+#define vvb vector<vb>
 
-    string s; cin >> s;
-    int n = s.size();
-    vi cnt1(n,0), cnt2(n,0);
+int ord(char c) {
+	return c-'0';
+}
 
-    rfor(i,n-2,0) {
-		cnt1[i] = cnt1[i+1] + (s[i] == 'B' and s[i+1] == 'A');
-		cnt2[i] = cnt2[i+1] + (s[i] == 'A' and s[i+1] == 'B');
-    }
+void solve() {
 
-    rep(i,n-2) {
-    	if(s.substr(i,2) == "AB" and cnt1[i+2] > 0) return 1; 
-    	if(s.substr(i,2) == "BA" and cnt2[i+2] > 0) return 1; 
-    }
+	string s;
+	cin >> s;
+	int n = s.size();
+	vvb dp(n, vb(8, false));
+	vvi prev(n, vi(8, -1));
 
-    return 0;
+	// dp[i][j] -> there exists some sequence in first i chars for which sequence % 8 is j
+
+	dp[0][ord(s[0])%8] = true;
+
+	repb(i,1,n) {
+		dp[i][ord(s[i]) % 8] = true;
+		rep(j,8) {
+			if(dp[i-1][j]) {
+				dp[i][j] = true; // ignore ith character
+				dp[i][(j*10 + ord(s[i])) % 8] = true; // include ith character
+				prev[i][j] = j;
+				prev[i][(j*10 + ord(s[i])) % 8] = j;
+			}
+		}
+	}
+
+	ll num = 0;
+
+	rep(i,n) {
+		if(dp[i][0]) {
+			ll currI = i, currJ = 0;
+			string ans = "";
+			while(true) {
+
+				if(prev[currI][currJ] == -1 or prev[currI][currJ] != currJ) { // whenever we change modulo, we include that number
+					ans += (s[currI]);
+				}
+
+				if(prev[currI][currJ] == -1) break;
+
+				currJ = prev[currI][currJ];
+				currI--;
+			}
+
+			reverse(ans.begin(), ans.end());
+			p1("YES"); p1(ans); return;
+
+		}
+	}
+
+	p1("NO");
 }
 
 
@@ -77,7 +116,7 @@ int main()
     #endif
 
     //w(tc)
-    (solve()) ? p1("YES") : p1("NO");
+    	solve();
 	
 	return 0;
 }

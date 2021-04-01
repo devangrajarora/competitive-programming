@@ -47,23 +47,22 @@ using namespace std;
 
 // read once, read again, think, code
 
-bool solve() {
+void solve() {
 
-    string s; cin >> s;
-    int n = s.size();
-    vi cnt1(n,0), cnt2(n,0);
+    ll n; cin >> n;
+    vi h1(n), h2(n);
+    rep(i,n) cin >> h1[i];
+    rep(i,n) cin >> h2[i];
 
-    rfor(i,n-2,0) {
-		cnt1[i] = cnt1[i+1] + (s[i] == 'B' and s[i+1] == 'A');
-		cnt2[i] = cnt2[i+1] + (s[i] == 'A' and s[i+1] == 'B');
-    }
+    ll best1 = h1[0], best2 = h2[0];
 
-    rep(i,n-2) {
-    	if(s.substr(i,2) == "AB" and cnt1[i+2] > 0) return 1; 
-    	if(s.substr(i,2) == "BA" and cnt2[i+2] > 0) return 1; 
-    }
+    repb(i,1,n) {
+    	ll new1 = max(h1[i] + best2, best1);
+    	ll new2 = max(h2[i] + best1, best2);
+    	best1 = new1, best2 = new2;
+    } 
 
-    return 0;
+    p1(max(best1, best2));
 }
 
 
@@ -77,7 +76,7 @@ int main()
     #endif
 
     //w(tc)
-    (solve()) ? p1("YES") : p1("NO");
+    	solve();
 	
 	return 0;
 }

@@ -20,50 +20,34 @@ using namespace std;
 
 // read once, read again, think, code
 
+int ans = INT_MIN;
+
+bool checkSorted(vi &a, int l, int r) {
+	rep(i,l,r-1) {
+		if(a[i] > a[i+1]) return false;
+	} return true;
+}
+
+void func(vi &a, int l, int r) {
+	if(l > r) return;
+	// p2(l,r);
+	int mid = (r-l)/2;
+	if(checkSorted(a,l,r)) {
+		ans = max(ans,r-l+1); return;
+	}
+	
+	func(a,l,l+mid);
+	func(a,l+mid+1,r);
+}
+
 void solve() {
 
-    string s;
-    cin >> s;
-    int n = s.size();
-    rep(i,0,n-1) {
-    	if(s[i] == '0') {p1("YES"); p1("0"); return;}
-    	if(s[i] == '8') {p1("YES"); p1("8"); return;}
-    }
-
-    if(n <= 2) {
-    	int num = stoi(s);
-    	if(num%8==0) {
-    		p1("YES"); p1(s); return;
-    	} else {
-    		p1("NO"); return;
-    	}
-    }
-
-    rep(i,0,n-2) {
-    	rep(j,i+1,n-1) {
-			int num = (s[i]-'0')*10 + (s[j]-'0');
-			if(num%8==0) {
-				string ans = to_string(num);
-				p1("YES"); p1(ans); return;
-			}
-		}
-    	
-    }
-
-    rep(i,0,n-3) {
-    	rep(j,i+1,n-2) {
-    		rep(k,j+1,n-1) {
-    			int num = (s[i]-'0')*100 + (s[j]-'0')*10 + (s[k]-'0');
-    			if(num%8==0) {
-    				string ans = s.substr(0,i) + to_string(num);
-    				p1("YES"); p1(ans); return;
-    			}
-    		}
-    	}
-    }
-
-    p1("NO");
-}	
+	int n; cin >> n;
+	vi a(n);
+	rep(i,0,n-1) cin >> a[i];    
+	func(a,0,n-1);
+	p1(ans);
+}
 
 
 int main()

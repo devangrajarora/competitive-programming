@@ -1,6 +1,6 @@
 #include<bits/stdc++.h>
 using namespace std;
-#define ll long long
+#define ll unsigned long long
 #define ld long double
 #define MOD 1000000007
 #define fi first
@@ -20,7 +20,7 @@ using namespace std;
 #define p1(a) cout << a << endl
 #define p2(a,b) cout << a << " " << b << endl
 #define watch(x) cout << (#x) << " is " << (x) << endl
-#define w(x) ll x; cin>>x; while(x--)
+#define w(x) 
 
     template <typename T1, typename T2>
     inline std::ostream& operator << (std::ostream& os, const std::pair<T1, T2>& p)
@@ -47,23 +47,28 @@ using namespace std;
 
 // read once, read again, think, code
 
-bool solve() {
+#define MAXM 100005
+// #define MAXM 5
 
-    string s; cin >> s;
-    int n = s.size();
-    vi cnt1(n,0), cnt2(n,0);
+ll k;
+vi noOfGoodStrings(MAXM, 1), psa(MAXM, 0);
 
-    rfor(i,n-2,0) {
-		cnt1[i] = cnt1[i+1] + (s[i] == 'B' and s[i+1] == 'A');
-		cnt2[i] = cnt2[i+1] + (s[i] == 'A' and s[i+1] == 'B');
-    }
+void precompute() {
+	repb(i,k,MAXM) {
+			ll currIsWhite = noOfGoodStrings[i-k] % MOD; // i-k+1 ... i are fixed white
+			ll currIsRed = noOfGoodStrings[i-1];
+			noOfGoodStrings[i] = (currIsRed + currIsWhite) % MOD;
+	}
 
-    rep(i,n-2) {
-    	if(s.substr(i,2) == "AB" and cnt1[i+2] > 0) return 1; 
-    	if(s.substr(i,2) == "BA" and cnt2[i+2] > 0) return 1; 
-    }
+	repb(i,1,MAXM) {
+		psa[i] = psa[i-1] + noOfGoodStrings[i];
+	}
+}
 
-    return 0;
+void solve() {
+	ll a,b; cin >> a >> b;
+    ll ans = (psa[b] - psa[a-1]) % MOD;
+    p1(ans);
 }
 
 
@@ -76,8 +81,10 @@ int main()
         freopen("/home/devang/output.txt","w",stdout);
     #endif
 
-    //w(tc)
-    (solve()) ? p1("YES") : p1("NO");
+    ll x; cin>>x>>k;
+    precompute(); 
+    while(x--)
+    	solve();
 	
 	return 0;
 }

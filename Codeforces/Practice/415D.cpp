@@ -47,23 +47,32 @@ using namespace std;
 
 // read once, read again, think, code
 
-bool solve() {
+ll n, k;
 
-    string s; cin >> s;
-    int n = s.size();
-    vi cnt1(n,0), cnt2(n,0);
+void solve() {
 
-    rfor(i,n-2,0) {
-		cnt1[i] = cnt1[i+1] + (s[i] == 'B' and s[i+1] == 'A');
-		cnt2[i] = cnt2[i+1] + (s[i] == 'A' and s[i+1] == 'B');
+    cin >> n >> k;
+    vvi dp(n+1, vi(k+1,0));
+
+    // k == 1 -> 1 way
+    repe(i,n) dp[i][1] = 1;
+
+    // dp[i][j] -> sequence of j numbers where last number is i
+    // dp[n][k] -> ans
+
+    repeb(i,1,n) {
+    	for(ll l = i ; l <= n ; l += i) { // all multiples of i
+    		repeb(j,2,k) {
+	    		dp[l][j] = (dp[l][j] + dp[i][j-1]) % MOD;
+	    	}
+    	}
     }
 
-    rep(i,n-2) {
-    	if(s.substr(i,2) == "AB" and cnt1[i+2] > 0) return 1; 
-    	if(s.substr(i,2) == "BA" and cnt2[i+2] > 0) return 1; 
-    }
+    ll ans = 0;
 
-    return 0;
+    repeb(i,1,n) ans = (ans + dp[i][k]) % MOD;
+    
+    p1(ans);
 }
 
 
@@ -77,7 +86,7 @@ int main()
     #endif
 
     //w(tc)
-    (solve()) ? p1("YES") : p1("NO");
+    	solve();
 	
 	return 0;
 }

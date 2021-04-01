@@ -47,23 +47,34 @@ using namespace std;
 
 // read once, read again, think, code
 
-bool solve() {
+void solve() {
 
-    string s; cin >> s;
-    int n = s.size();
-    vi cnt1(n,0), cnt2(n,0);
+	ll n, sum = 0; cin >> n;
+	vi a(n), cnt(n, 0), psa(n);
+	unordered_map<ll,ll> m;
+	rep(i,n) {
+		cin >> a[i];
+		sum += a[i];
+		psa[i] = sum;
+		m[sum]++;
+	} 
+    
+	if(sum%3 != 0) {
+		p1("0"); return;
+	}
 
-    rfor(i,n-2,0) {
-		cnt1[i] = cnt1[i+1] + (s[i] == 'B' and s[i+1] == 'A');
-		cnt2[i] = cnt2[i+1] + (s[i] == 'A' and s[i+1] == 'B');
-    }
+	cnt[n-3] = (psa[n-2] == 2*sum/3);
+	rfor(i,n-4,0) {
+		cnt[i] = cnt[i+1] + (psa[i+1] == 2*sum/3);
+	}	
 
-    rep(i,n-2) {
-    	if(s.substr(i,2) == "AB" and cnt1[i+2] > 0) return 1; 
-    	if(s.substr(i,2) == "BA" and cnt2[i+2] > 0) return 1; 
-    }
+	ll ans = 0;
 
-    return 0;
+	rep(i,n-2) {
+		if(psa[i] == sum/3) ans += cnt[i];
+	}
+
+	p1(ans);
 }
 
 
@@ -77,7 +88,7 @@ int main()
     #endif
 
     //w(tc)
-    (solve()) ? p1("YES") : p1("NO");
+    	solve();
 	
 	return 0;
 }

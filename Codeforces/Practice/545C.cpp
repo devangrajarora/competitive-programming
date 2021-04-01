@@ -11,55 +11,62 @@ using namespace std;
 #define repeb(i,a,b) for(ll i = a ; i <= b ; i++)
 #define rfor(i,n,a) for(ll i = n ; i >= a ; i--)
 #define pb push_back
-#define popb pop_back()
 #define endl "\n"
-#define pii pair < long long, long long >
-typedef priority_queue<ll, vector<ll>, greater<ll>> minheap;
-typedef priority_queue<ll> maxheap;
+#define vi vector<ll>
+#define vvi vector<vi>
+#define pii pair <ll,ll>
 #define fastio ios_base::sync_with_stdio(false);cin.tie(NULL)
 #define p0(a) cout << a << " "
 #define p1(a) cout << a << endl
 #define p2(a,b) cout << a << " " << b << endl
-#define p3(a,b,c) cout << a << " " << b << " " << c << endl
-#define p4(a,b,c,d) cout << a << " " << b << " " << c << " " << d << endl
-#define sortv(v) sort(v.begin(),v.end())
-#define rsortv(v) sort(v.begin(),v.end(), greater<>());
-#define sortby(v,prop) sort( v.begin( ), v.end( ), [ ]( const auto& lhs, const auto& rhs ){ return lhs.prop < rhs.prop; });
-#define rsortby(v,prop) sort( v.begin( ), v.end( ), [ ]( const auto& lhs, const auto& rhs ){ return lhs.prop > rhs.prop; });
+#define watch(x) cout << (#x) << " is " << (x) << endl
+#define w(x) ll x; cin>>x; while(x--)
 
-ll modPower(ll num,ll r){
-	if(r==0) return 1;
-	if(r==1) return num%MOD;
-	ll ans=modPower(num,r/2)%MOD;
-	if(r%2==0) {
-		return (ans*ans)%MOD;
-	} return (((ans*ans)%MOD)*num)%MOD;
-}
-
+    template <typename T1, typename T2>
+    inline std::ostream& operator << (std::ostream& os, const std::pair<T1, T2>& p)
+    {
+        return os << "(" << p.first << ", " << p.second << ")";
+    }
+ 
+    template<typename T>
+    inline std::ostream &operator << (std::ostream & os,const std::vector<T>& v)
+    {
+        bool first = true;
+        os << "[";
+        for(unsigned int i = 0; i < v.size(); i++)
+        {
+            if(!first)
+                os << ", ";
+            os << v[i];
+            first = false;
+        }
+        return os << "]";
+    }
+    
 /*-------------------------------------------------*/
+
+// read once, read again, think, code
 
 void solve() {
 
-	ll n, ans = 2;
-	cin >> n;
+    ll n;cin >> n;
+    vi x(n), h(n); 
+    rep(i,n) cin >> x[i] >> h[i];
 
-	ll x[n], h[n];
-
-	rep(i,n) {
-		cin >> x[i] >> h[i];
-	}
-
-	if(n==1) {
-		p1(1);
-		return;
-	}
-
-	repb(i,1,n-1) {
-		if(x[i] - h[i] > x[i-1]) {
-			ans++;
-		} else if(x[i+1] > x[i] + h[i]) {
-			ans++;
-			x[i] += h[i];
+    if(n == 1) {
+    	p1("1"); return;
+    }
+    
+    ll ans = 1, lastPt = x[0];
+	repb(i,1,n) {
+		if(x[i] - lastPt > h[i]) {
+			// p2("LEFT: ",i);
+			lastPt = x[i]; ans++;
+		} else if(i == n-1 or x[i+1] - x[i] > h[i]) {
+			// p2("RIGHT: ",i);
+			lastPt = x[i] + h[i]; ans++;
+		} else {
+			lastPt = x[i];
 		}
 	}
 
@@ -70,6 +77,14 @@ void solve() {
 int main()
 {
 	fastio;
-	solve();
+
+    #ifndef ONLINE_JUDGE
+        freopen("/home/devang/input.txt","r",stdin);
+        freopen("/home/devang/output.txt","w",stdout);
+    #endif
+
+    //w(tc)
+    	solve();
+	
 	return 0;
 }

@@ -47,23 +47,26 @@ using namespace std;
 
 // read once, read again, think, code
 
-bool solve() {
+void solve() {
 
-    string s; cin >> s;
-    int n = s.size();
-    vi cnt1(n,0), cnt2(n,0);
+    ll n, ans = 1; cin >> n;
+    vi a(n+1), dp(n+1);
+    rep(i,n) cin >> a[i+1];
+    dp[1] = 1;
 
-    rfor(i,n-2,0) {
-		cnt1[i] = cnt1[i+1] + (s[i] == 'B' and s[i+1] == 'A');
-		cnt2[i] = cnt2[i+1] + (s[i] == 'A' and s[i+1] == 'B');
+    repeb(i,2,n) {
+    	ll SQRT = sqrt(i), mx = (a[i] > a[1]);
+    	repeb(j,2,SQRT) {
+    		if(i%j==0) {
+    			if(a[i] > a[j]) mx = max(mx, dp[j]);
+    			if(a[i] > a[i/j]) mx = max(mx, dp[i/j]);
+    		}
+    	}
+
+    	dp[i] = 1 + mx;
+    	ans = max(ans, dp[i]);
     }
-
-    rep(i,n-2) {
-    	if(s.substr(i,2) == "AB" and cnt1[i+2] > 0) return 1; 
-    	if(s.substr(i,2) == "BA" and cnt2[i+2] > 0) return 1; 
-    }
-
-    return 0;
+    p1(ans);
 }
 
 
@@ -76,8 +79,8 @@ int main()
         freopen("/home/devang/output.txt","w",stdout);
     #endif
 
-    //w(tc)
-    (solve()) ? p1("YES") : p1("NO");
+    w(tc)
+    	solve();
 	
 	return 0;
 }

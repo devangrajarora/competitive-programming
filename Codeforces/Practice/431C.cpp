@@ -11,83 +11,91 @@ using namespace std;
 #define repeb(i,a,b) for(ll i = a ; i <= b ; i++)
 #define rfor(i,n,a) for(ll i = n ; i >= a ; i--)
 #define pb push_back
-#define popb pop_back()
 #define endl "\n"
-#define pii pair < long long, long long >
-typedef priority_queue<ll, vector<ll>, greater<ll>> minheap;
-typedef priority_queue<ll> maxheap;
+#define vi vector<ll>
+#define vvi vector<vi>
+#define pii pair <ll,ll>
 #define fastio ios_base::sync_with_stdio(false);cin.tie(NULL)
 #define p0(a) cout << a << " "
 #define p1(a) cout << a << endl
 #define p2(a,b) cout << a << " " << b << endl
-#define p3(a,b,c) cout << a << " " << b << " " << c << endl
-#define p4(a,b,c,d) cout << a << " " << b << " " << c << " " << d << endl
-#define sortv(v) sort(v.begin(),v.end())
-#define rsortv(v) sort(v.begin(),v.end(), greater<>());
-#define sortby(v,prop) sort( v.begin( ), v.end( ), [ ]( const auto& lhs, const auto& rhs ){ return lhs.prop < rhs.prop; });
-#define rsortby(v,prop) sort( v.begin( ), v.end( ), [ ]( const auto& lhs, const auto& rhs ){ return lhs.prop > rhs.prop; });
+#define watch(x) cout << (#x) << " is " << (x) << endl
+#define w(x) ll x; cin>>x; while(x--)
 
-ll modPower(ll num,ll r){
-	if(r==0) return 1;
-	if(r==1) return num%MOD;
-	ll ans=modPower(num,r/2)%MOD;
-	if(r%2==0) {
-		return (ans*ans)%MOD;
-	} return (((ans*ans)%MOD)*num)%MOD;
-}
-
+    template <typename T1, typename T2>
+    inline std::ostream& operator << (std::ostream& os, const std::pair<T1, T2>& p)
+    {
+        return os << "(" << p.first << ", " << p.second << ")";
+    }
+ 
+    template<typename T>
+    inline std::ostream &operator << (std::ostream & os,const std::vector<T>& v)
+    {
+        bool first = true;
+        os << "[";
+        for(unsigned int i = 0; i < v.size(); i++)
+        {
+            if(!first)
+                os << ", ";
+            os << v[i];
+            first = false;
+        }
+        return os << "]";
+    }
+    
 /*-------------------------------------------------*/
 
-#define vi vector<int>
-#define vvi vector<vi>
+// read once, read again, think, code
 
-ll k, d;
+/*
 
-int func(ll n, bool cond, vvi &dp) {
+(int weight -> n, bool covered)
 
-	if(n == 0) {
-		return cond ? 1 : 0;
-	}
 
-	if(dp[n][cond] != -1) return dp[n][cond];
+k = 3, d = 2
+						(4,false)
+	(3,false)	 		(2,true) 		(1,true)
+(2,false) (1,true) (0,true)
+*/
 
-	if(n < d && !cond) {
-		dp[n][cond] = 0;
-		return 0;
-	}
+void solve() {
 
-	ll x = min(n,k), ans = 0;
-	for(int i = 1 ; i <= x ; i++) {
+	ll n, k, d;
+	cin >> n >> k >> d;
+	vvi dp(n+1, vi(2, 0));    
+	dp[0][0] = 1;
+	
+	// dp[n][0] -> no of ways of getting sum n when we haven't encountered atleast one edge not less than d
+	// dp[n][1] -> no of ways of getting sum n when we have encountered atleast one edge not less than d
 
-		if(cond) {
-			ans = (ans + func(n-i,cond,dp))%MOD;
-		} else {
-			if(i < d) {
-				ans = (ans + func(n-i, cond, dp))%MOD;
-			} else {
-				ans = (ans + func(n-i,true,dp))%MOD;
+	repeb(i,1,n) {
+		repeb(j,1,k) {
+			if(i-j < 0) break;
+			if(j < d) { // current edge less than d
+				dp[i][0] = (dp[i][0] + dp[i-j][0]) % MOD; 
+				dp[i][1] = (dp[i][1] + dp[i-j][1]) % MOD;  
+			} else { // current edge not less than d -> not dp[i] will have 1 as bool value coz we found a suitable edge
+				dp[i][1] = (dp[i][1] + dp[i-j][0]) % MOD;  
+				dp[i][1] = (dp[i][1] + dp[i-j][1]) % MOD;  
 			}
 		}
 	}
 
-	dp[n][cond] = ans%MOD;
-	return dp[n][cond];
-}
-
-void solve() {
-
-	ll n;
-	cin >> n >> k >> d;
-	vvi dp(n+1, vi(2,-1));
-
-	ll ans = func(n,false,dp);
-	p1(ans);
+	p1(dp[n][1]);
 }
 
 
 int main()
 {
 	fastio;
-	solve();
+
+    #ifndef ONLINE_JUDGE
+        freopen("/home/devang/input.txt","r",stdin);
+        freopen("/home/devang/output.txt","w",stdout);
+    #endif
+
+    //w(tc)
+    	solve();
+	
 	return 0;
 }

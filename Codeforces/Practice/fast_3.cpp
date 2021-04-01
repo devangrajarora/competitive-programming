@@ -47,23 +47,20 @@ using namespace std;
 
 // read once, read again, think, code
 
-bool solve() {
+void solve() {
 
-    string s; cin >> s;
-    int n = s.size();
-    vi cnt1(n,0), cnt2(n,0);
+    ll a, b;
+    cin >> a >> b;
+    ll d = abs(a-b);
 
-    rfor(i,n-2,0) {
-		cnt1[i] = cnt1[i+1] + (s[i] == 'B' and s[i+1] == 'A');
-		cnt2[i] = cnt2[i+1] + (s[i] == 'A' and s[i+1] == 'B');
+    if(b > a) {
+    	if(a-d <= 0) p1(b+1);
+    	else p1(0);
+    } else {
+    	if(b > 0) p1(0);
+    	else p1(a+d+1);
     }
 
-    rep(i,n-2) {
-    	if(s.substr(i,2) == "AB" and cnt1[i+2] > 0) return 1; 
-    	if(s.substr(i,2) == "BA" and cnt2[i+2] > 0) return 1; 
-    }
-
-    return 0;
 }
 
 
@@ -77,7 +74,7 @@ int main()
     #endif
 
     //w(tc)
-    (solve()) ? p1("YES") : p1("NO");
+    	solve();
 	
 	return 0;
 }
