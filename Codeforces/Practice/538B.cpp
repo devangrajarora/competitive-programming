@@ -17,7 +17,7 @@ using namespace std;
 #define pii pair <ll,ll>
 #define fastio ios_base::sync_with_stdio(false);cin.tie(NULL)
 #define p0(a) cout << a << " "
-#define p1(a) cout << a << endl
+#define p1(a) cout << a << "\n"
 #define p2(a,b) cout << a << " " << b << endl
 #define watch(x) cout << (#x) << " is " << (x) << endl
 #define w(x) ll x; cin>>x; while(x--)
@@ -47,50 +47,38 @@ using namespace std;
 
 // read once, read again, think, code
 
-#define INF 1e14+1
-
-string rev(string s) {
-	reverse(s.begin(), s.end());
-	return s;
-}
-
 void solve() {
 
+	ll opt[] = {1, 10, 11, 100, 101, 110, 111, 1000, 1001, 1010, 1011, 1100, 1101, 1110, 1111, 10000, 10001, 10010, 10011, 10100, 10101, 10110, 10111, 11000, 11001, 11010, 11011, 11100, 11101, 11110, 11111, 100000, 100001, 100010, 100011, 100100, 100101, 100110, 100111, 101000, 101001, 101010, 101011, 101100, 101101, 101110, 101111, 110000, 110001, 110010, 110011, 110100, 110101, 110110, 110111, 111000, 111001, 111010, 111011, 111100, 111101, 111110, 111111, 1000000};
 	ll n; cin >> n;
-	vi c(n);
-	rep(i,n) cin >> c[i];
+	vi dp(n+1,1), prev(n+1, 0);
+	dp[0] = 0;
 
-	// dp[i][0] -> cost of sorting first i strings when ith string is not reversed    
-	// dp[i][1] -> cost of sorting first i strings when ith string is reversed    
+	repeb(i,1,n) {
 
-	ll prevVal = 0, currVal;
-	ll prevValRev = c[0], currValRev;
+		ll j = 0, best = INT_MAX, idx;
+		while(opt[j] <= i) {
+			if(dp[i - opt[j]] <= best) {
+				best = dp[i - opt[j]];
+				idx = j;
+			} j++;
+		} 
 
-	string prev, curr, currRev; cin >> prev;
-	string prevRev = rev(prev);
-
-	repb(i,1,n) {
-		cin >> curr;
-		currRev = rev(curr);
-
-		ll op1 = (curr >= prev) ? prevVal : INF;
-		ll op2 = (curr >= prevRev) ? prevValRev : INF;
-
-		ll op3 = (currRev >= prev) ? prevVal + c[i] : INF;
-		ll op4 = (currRev >= prevRev) ? prevValRev + c[i] : INF;
-
-		currVal = min(op1, op2);
-		currValRev = min(op3, op4);
-
-		prevVal = currVal;
-		prevValRev = currValRev;
-		prev = curr;
-		prevRev = currRev;
+		dp[i] = 1 + best;
+		prev[i] = idx;
 	}
 
-	ll ans = min(currVal, currValRev);
-	if(ans == INF) ans = -1;
-	p1(ans);
+	p1(dp[n]);
+
+	ll currIdx = prev[n], num = n;
+	while(num > 0) {
+		if(num <= 9) {
+			p0(1); num -= 1; 
+		} else {
+			p0(opt[prev[num]]);
+			num -= opt[prev[num]];
+		}
+	}
 }
 
 

@@ -42,55 +42,40 @@ using namespace std;
         }
         return os << "]";
     }
+
+	template<typename T1, typename T2>
+    inline std::ostream &operator << (std::ostream & os,const std::map<T1, T2>& v)
+    {
+        bool first = true;
+        os << "[";
+        for (typename std::map<T1, T2>::const_iterator iii = v.begin(); iii != v.end(); ++iii)
+        {
+            if(!first)
+                os << ", ";
+            os << *iii ;
+            first = false;
+        }
+        return os << "]";
+    }
     
 /*-------------------------------------------------*/
 
 // read once, read again, think, code
 
-#define INF 1e14+1
-
-string rev(string s) {
-	reverse(s.begin(), s.end());
-	return s;
-}
-
 void solve() {
 
-	ll n; cin >> n;
-	vi c(n);
-	rep(i,n) cin >> c[i];
-
-	// dp[i][0] -> cost of sorting first i strings when ith string is not reversed    
-	// dp[i][1] -> cost of sorting first i strings when ith string is reversed    
-
-	ll prevVal = 0, currVal;
-	ll prevValRev = c[0], currValRev;
-
-	string prev, curr, currRev; cin >> prev;
-	string prevRev = rev(prev);
-
-	repb(i,1,n) {
-		cin >> curr;
-		currRev = rev(curr);
-
-		ll op1 = (curr >= prev) ? prevVal : INF;
-		ll op2 = (curr >= prevRev) ? prevValRev : INF;
-
-		ll op3 = (currRev >= prev) ? prevVal + c[i] : INF;
-		ll op4 = (currRev >= prevRev) ? prevValRev + c[i] : INF;
-
-		currVal = min(op1, op2);
-		currValRev = min(op3, op4);
-
-		prevVal = currVal;
-		prevValRev = currValRev;
-		prev = curr;
-		prevRev = currRev;
+	ll n, sum = 0, ans = 0; cin >> n;
+	string s; cin >> s;
+	unordered_map<ll,ll> m;
+	m[0]++;
+	rep(i,n) {
+		sum += (s[i]-'0');
+		m[sum-(i+1)]++;
 	}
 
-	ll ans = min(currVal, currValRev);
-	if(ans == INF) ans = -1;
-	p1(ans);
+	for(auto &it : m) {
+		ans += it.se * (it.se-1) / 2;
+	} p1(ans);
 }
 
 
@@ -103,7 +88,7 @@ int main()
         freopen("/home/devang/output.txt","w",stdout);
     #endif
 
-    //w(tc)
+    w(tc)
     	solve();
 	
 	return 0;

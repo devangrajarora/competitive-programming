@@ -12,7 +12,7 @@ using namespace std;
 #define rfor(i,n,a) for(ll i = n ; i >= a ; i--)
 #define pb push_back
 #define endl "\n"
-#define vi vector<ll>
+#define vi vector<int>
 #define vvi vector<vi>
 #define pii pair <ll,ll>
 #define fastio ios_base::sync_with_stdio(false);cin.tie(NULL)
@@ -47,50 +47,39 @@ using namespace std;
 
 // read once, read again, think, code
 
-#define INF 1e14+1
+// 0,1,2,3 -> D,A,B,C
+// moveTo(0,N) =  sum ( moveTo([1,2,3], N-1) )
 
-string rev(string s) {
-	reverse(s.begin(), s.end());
-	return s;
+// o(4*N) space
+
+ll moveTo(int dest, int n, vvi &dp) {
+	if(n == 0) return dest == 0;
+	if(dp[dest][n] != -1) return dp[dest][n];
+	ll ans = 0;
+	rep(i,4) {
+		if(i == dest) continue;
+		ans = (ans + moveTo(i, n-1, dp)) % MOD;
+	}
+
+	return dp[dest][n] = ans;
 }
+
+// O(1) space
 
 void solve() {
 
-	ll n; cin >> n;
-	vi c(n);
-	rep(i,n) cin >> c[i];
+    int n; cin >> n;
+    int waysToD = 1, waysToA = 0, waysToB = 0, waysToC = 0;
+    repeb(i,1,n) {
+    	int nextWaysToD = ((waysToA + waysToB) % MOD + waysToC) % MOD;
+    	int nextWaysToA = ((waysToD + waysToB) % MOD + waysToC) % MOD;
+    	int nextWaysToB = ((waysToA + waysToD) % MOD + waysToC) % MOD;
+    	int nextWaysToC = ((waysToA + waysToB) % MOD + waysToD) % MOD;
 
-	// dp[i][0] -> cost of sorting first i strings when ith string is not reversed    
-	// dp[i][1] -> cost of sorting first i strings when ith string is reversed    
+    	waysToD = nextWaysToD, waysToA = nextWaysToA, waysToB = nextWaysToB, waysToC = nextWaysToC;
+    }
 
-	ll prevVal = 0, currVal;
-	ll prevValRev = c[0], currValRev;
-
-	string prev, curr, currRev; cin >> prev;
-	string prevRev = rev(prev);
-
-	repb(i,1,n) {
-		cin >> curr;
-		currRev = rev(curr);
-
-		ll op1 = (curr >= prev) ? prevVal : INF;
-		ll op2 = (curr >= prevRev) ? prevValRev : INF;
-
-		ll op3 = (currRev >= prev) ? prevVal + c[i] : INF;
-		ll op4 = (currRev >= prevRev) ? prevValRev + c[i] : INF;
-
-		currVal = min(op1, op2);
-		currValRev = min(op3, op4);
-
-		prevVal = currVal;
-		prevValRev = currValRev;
-		prev = curr;
-		prevRev = currRev;
-	}
-
-	ll ans = min(currVal, currValRev);
-	if(ans == INF) ans = -1;
-	p1(ans);
+    p1(waysToD);
 }
 
 

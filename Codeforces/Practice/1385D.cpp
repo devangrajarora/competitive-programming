@@ -19,6 +19,7 @@ using namespace std;
 #define p0(a) cout << a << " "
 #define p1(a) cout << a << endl
 #define p2(a,b) cout << a << " " << b << endl
+#define p3(a,b,c) cout << a << " " << b << " " << c << endl
 #define watch(x) cout << (#x) << " is " << (x) << endl
 #define w(x) ll x; cin>>x; while(x--)
 
@@ -47,50 +48,35 @@ using namespace std;
 
 // read once, read again, think, code
 
-#define INF 1e14+1
+int n;
 
-string rev(string s) {
-	reverse(s.begin(), s.end());
-	return s;
+ll cost(string &s, char c, int st, int en) {
+
+	ll allSame = 0, firstHalfSame = 0, secondHalfSame = 0;
+	int mid = (st+en)/2;
+	if(st > en) return 0;
+	if(st == en) return s[st] != c;
+
+	repeb(i,st,en) {
+		if(s[i] == c) continue;
+		allSame++;
+		(i <= mid) ? firstHalfSame++ : secondHalfSame++; 
+	}  
+
+	ll convertFirst = cost(s,c+1,st,mid);
+	ll convertSecond = cost(s,c+1,mid+1,en);
+
+	ll ans = min(firstHalfSame + convertSecond, secondHalfSame + convertFirst);
+	return ans;
 }
 
 void solve() {
 
-	ll n; cin >> n;
-	vi c(n);
-	rep(i,n) cin >> c[i];
+	cin >> n;
+    string s; cin >> s;
 
-	// dp[i][0] -> cost of sorting first i strings when ith string is not reversed    
-	// dp[i][1] -> cost of sorting first i strings when ith string is reversed    
-
-	ll prevVal = 0, currVal;
-	ll prevValRev = c[0], currValRev;
-
-	string prev, curr, currRev; cin >> prev;
-	string prevRev = rev(prev);
-
-	repb(i,1,n) {
-		cin >> curr;
-		currRev = rev(curr);
-
-		ll op1 = (curr >= prev) ? prevVal : INF;
-		ll op2 = (curr >= prevRev) ? prevValRev : INF;
-
-		ll op3 = (currRev >= prev) ? prevVal + c[i] : INF;
-		ll op4 = (currRev >= prevRev) ? prevValRev + c[i] : INF;
-
-		currVal = min(op1, op2);
-		currValRev = min(op3, op4);
-
-		prevVal = currVal;
-		prevValRev = currValRev;
-		prev = curr;
-		prevRev = currRev;
-	}
-
-	ll ans = min(currVal, currValRev);
-	if(ans == INF) ans = -1;
-	p1(ans);
+    ll ans = cost(s,'a',0,n-1);
+    p1(ans);
 }
 
 
@@ -103,7 +89,7 @@ int main()
         freopen("/home/devang/output.txt","w",stdout);
     #endif
 
-    //w(tc)
+    w(tc)
     	solve();
 	
 	return 0;

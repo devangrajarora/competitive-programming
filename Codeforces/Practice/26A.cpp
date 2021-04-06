@@ -47,52 +47,27 @@ using namespace std;
 
 // read once, read again, think, code
 
-#define INF 1e14+1
+int countPrimeFactors(ll n) {
+	ll cnt = 0;
+	for(ll i = 2 ; i*i <= n ; i++) {
+		if(n%i==0) {
+			cnt++;
+			while(n%i==0) n /= i;
+		}
+	}
 
-string rev(string s) {
-	reverse(s.begin(), s.end());
-	return s;
+	if(n > 1) cnt++;
+	return cnt;
 }
 
 void solve() {
 
-	ll n; cin >> n;
-	vi c(n);
-	rep(i,n) cin >> c[i];
-
-	// dp[i][0] -> cost of sorting first i strings when ith string is not reversed    
-	// dp[i][1] -> cost of sorting first i strings when ith string is reversed    
-
-	ll prevVal = 0, currVal;
-	ll prevValRev = c[0], currValRev;
-
-	string prev, curr, currRev; cin >> prev;
-	string prevRev = rev(prev);
-
-	repb(i,1,n) {
-		cin >> curr;
-		currRev = rev(curr);
-
-		ll op1 = (curr >= prev) ? prevVal : INF;
-		ll op2 = (curr >= prevRev) ? prevValRev : INF;
-
-		ll op3 = (currRev >= prev) ? prevVal + c[i] : INF;
-		ll op4 = (currRev >= prevRev) ? prevValRev + c[i] : INF;
-
-		currVal = min(op1, op2);
-		currValRev = min(op3, op4);
-
-		prevVal = currVal;
-		prevValRev = currValRev;
-		prev = curr;
-		prevRev = currRev;
-	}
-
-	ll ans = min(currVal, currValRev);
-	if(ans == INF) ans = -1;
+    ll n, ans = 0; cin >> n;
+    repeb(i,5,n) {
+    	if(countPrimeFactors(i) == 2) ans++;
+    }
 	p1(ans);
 }
-
 
 int main()
 {

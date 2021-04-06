@@ -47,50 +47,52 @@ using namespace std;
 
 // read once, read again, think, code
 
-#define INF 1e14+1
-
-string rev(string s) {
-	reverse(s.begin(), s.end());
-	return s;
-}
-
 void solve() {
 
-	ll n; cin >> n;
-	vi c(n);
-	rep(i,n) cin >> c[i];
+    ll n, one = 0, zero = 0; cin >> n;
+    string s;
+    cin >> s;
 
-	// dp[i][0] -> cost of sorting first i strings when ith string is not reversed    
-	// dp[i][1] -> cost of sorting first i strings when ith string is reversed    
+    rep(i,n) {
+    	(s[i] == '0') ? zero++ : one++;
+    }
 
-	ll prevVal = 0, currVal;
-	ll prevValRev = c[0], currValRev;
+    if(s[0] == '0' or s[n-1] == '0' or (zero > 0 and (zero%2 or one%2))) {
+    	p1("NO");
+    	return;
+    }
 
-	string prev, curr, currRev; cin >> prev;
-	string prevRev = rev(prev);
+    string a(n,'0');
+    string b(n,'0');
+    a[0] = b[0] = '(';
+    a[n-1] = b[n-1] = ')';
+    bool flip = true;
+    rep(i,n) {
+    	if(s[i] == '0') {
+    		if(flip) {
+    			a[i] = '('; b[i] = ')';
+    		} else {
+    			a[i] = ')'; b[i] = '(';
+    		}
+    		flip = !flip;
+    	}
+    }
 
-	repb(i,1,n) {
-		cin >> curr;
-		currRev = rev(curr);
+    flip = true;
+   	repb(i,1,n-1) {
+    	if(s[i] == '1') {
+    		if(flip) {
+    			a[i] = '('; b[i] = '(';
+    		} else {
+    			a[i] = ')'; b[i] = ')';
+    		}
+    		flip = !flip;
+    	}
+    }
 
-		ll op1 = (curr >= prev) ? prevVal : INF;
-		ll op2 = (curr >= prevRev) ? prevValRev : INF;
-
-		ll op3 = (currRev >= prev) ? prevVal + c[i] : INF;
-		ll op4 = (currRev >= prevRev) ? prevValRev + c[i] : INF;
-
-		currVal = min(op1, op2);
-		currValRev = min(op3, op4);
-
-		prevVal = currVal;
-		prevValRev = currValRev;
-		prev = curr;
-		prevRev = currRev;
-	}
-
-	ll ans = min(currVal, currValRev);
-	if(ans == INF) ans = -1;
-	p1(ans);
+    p1("YES");
+    p1(a);
+    p1(b);
 }
 
 
@@ -103,7 +105,7 @@ int main()
         freopen("/home/devang/output.txt","w",stdout);
     #endif
 
-    //w(tc)
+    w(tc)
     	solve();
 	
 	return 0;

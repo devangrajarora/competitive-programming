@@ -122,6 +122,10 @@ void solve() {
 int main()
 {
 	fastio;
+    #ifndef ONLINE_JUDGE
+        freopen("/home/devang/input.txt","r",stdin);
+        freopen("/home/devang/output.txt","w",stdout);
+    #endif
 	solve();
 	return 0;
 }

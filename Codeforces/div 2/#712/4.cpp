@@ -12,13 +12,14 @@ using namespace std;
 #define rfor(i,n,a) for(ll i = n ; i >= a ; i--)
 #define pb push_back
 #define endl "\n"
-#define vi vector<ll>
+#define vi vector<int>
 #define vvi vector<vi>
 #define pii pair <ll,ll>
 #define fastio ios_base::sync_with_stdio(false);cin.tie(NULL)
 #define p0(a) cout << a << " "
 #define p1(a) cout << a << endl
 #define p2(a,b) cout << a << " " << b << endl
+#define p3(a,b,c) cout << a << " " << b << " " << c << endl
 #define watch(x) cout << (#x) << " is " << (x) << endl
 #define w(x) ll x; cin>>x; while(x--)
 
@@ -47,56 +48,97 @@ using namespace std;
 
 // read once, read again, think, code
 
-#define INF 1e14+1
+#define FLUSH fflush(stdout); fflush(stdin)
 
-string rev(string s) {
-	reverse(s.begin(), s.end());
-	return s;
+vvi a(101,vi(101, 0));
+
+bool black(bool rOdd, bool cOdd) {
+	return (rOdd and cOdd) or (!rOdd and !cOdd);
 }
+
+ll n;
+
+bool place1() {
+	repeb(i,1,n) {
+		repeb(j,1,n) {
+			if(a[i][j]) continue;
+			bool rOdd = i%2, cOdd = j%2;
+			if(black(rOdd, cOdd)) {
+				a[i][j] = 1;
+				p3(1,i,j); FLUSH;
+				return true;
+			}
+		}
+	}
+
+	return false;
+}
+
+bool place2() {
+	repeb(i,1,n) {
+		repeb(j,1,n) {
+			if(a[i][j]) continue;
+			bool rOdd = i%2, cOdd = j%2;
+			if(!black(rOdd, cOdd)) {
+				a[i][j] = 2;
+				p3(2,i,j); FLUSH;
+				return true;
+			}
+		}
+	}
+
+	return false;
+}
+
+void place3() {
+	repeb(i,1,n) {
+		repeb(j,1,n) {
+			if(a[i][j]) continue;
+			int up = (i == 1) ? 0 : a[i-1][j];
+			int down = (i == n) ? 0 : a[i+1][j];
+			int right = (j == n) ? 0 : a[i][j+1];
+			int left = (j == 1) ? 0 : a[i][j-1];
+
+			if(up != 3 and down != 3 and right != 3 and left != 3) {
+				a[i][j] = 3;
+				p3(3,i,j); FLUSH;
+				return;
+			}
+		}
+	}
+}
+
 
 void solve() {
 
-	ll n; cin >> n;
-	vi c(n);
-	rep(i,n) cin >> c[i];
+    ll c; cin >> n;
+    ll sq = n*n;
+    
+    repeb(cnt,1,sq) {
 
-	// dp[i][0] -> cost of sorting first i strings when ith string is not reversed    
-	// dp[i][1] -> cost of sorting first i strings when ith string is reversed    
+    	FLUSH;
+    	cin >> c;
 
-	ll prevVal = 0, currVal;
-	ll prevValRev = c[0], currValRev;
+    	// 1 on black
+    	// 2 on white
+    	// 3 anywhere when no option
 
-	string prev, curr, currRev; cin >> prev;
-	string prevRev = rev(prev);
-
-	repb(i,1,n) {
-		cin >> curr;
-		currRev = rev(curr);
-
-		ll op1 = (curr >= prev) ? prevVal : INF;
-		ll op2 = (curr >= prevRev) ? prevValRev : INF;
-
-		ll op3 = (currRev >= prev) ? prevVal + c[i] : INF;
-		ll op4 = (currRev >= prevRev) ? prevValRev + c[i] : INF;
-
-		currVal = min(op1, op2);
-		currValRev = min(op3, op4);
-
-		prevVal = currVal;
-		prevValRev = currValRev;
-		prev = curr;
-		prevRev = currRev;
-	}
-
-	ll ans = min(currVal, currValRev);
-	if(ans == INF) ans = -1;
-	p1(ans);
+    	if(c == 1) {
+    		if(place2());
+    		else place3();
+    	} else if(c == 2) {
+    		if(place1());
+    		else place3();
+    	} else {
+    		if(place1());
+    		else place2();
+    	}
+    }
 }
 
 
 int main()
 {
-	fastio;
 
     #ifndef ONLINE_JUDGE
         freopen("/home/devang/input.txt","r",stdin);

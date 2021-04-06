@@ -47,55 +47,50 @@ using namespace std;
 
 // read once, read again, think, code
 
-#define INF 1e14+1
+// O(n^2) dp
 
-string rev(string s) {
-	reverse(s.begin(), s.end());
-	return s;
+void dp() {
+
+	ll n; cin >> n;
+	vi a(n), dp(n,0);
+	rep(i,n) cin >> a[i];    
+	ll ans = dp[0] = a[0];
+
+	repb(i,1,n) {
+		ll best = 0;
+		rfor(j,i-1,0) {
+			if(a[i] - a[j] == i-j) {
+				best = max(best, dp[j]); break;
+			} 
+		} 
+		dp[i] = a[i] + best;
+		ans = max(ans, dp[i]); 
+	}
+
+	p1(ans);
 }
 
 void solve() {
 
-	ll n; cin >> n;
-	vi c(n);
-	rep(i,n) cin >> c[i];
+	ll n, num, ans = 0; cin >> n;
+	unordered_map<ll,ll> m;
 
-	// dp[i][0] -> cost of sorting first i strings when ith string is not reversed    
-	// dp[i][1] -> cost of sorting first i strings when ith string is reversed    
-
-	ll prevVal = 0, currVal;
-	ll prevValRev = c[0], currValRev;
-
-	string prev, curr, currRev; cin >> prev;
-	string prevRev = rev(prev);
-
-	repb(i,1,n) {
-		cin >> curr;
-		currRev = rev(curr);
-
-		ll op1 = (curr >= prev) ? prevVal : INF;
-		ll op2 = (curr >= prevRev) ? prevValRev : INF;
-
-		ll op3 = (currRev >= prev) ? prevVal + c[i] : INF;
-		ll op4 = (currRev >= prevRev) ? prevValRev + c[i] : INF;
-
-		currVal = min(op1, op2);
-		currValRev = min(op3, op4);
-
-		prevVal = currVal;
-		prevValRev = currValRev;
-		prev = curr;
-		prevRev = currRev;
+	rep(i,n) {
+		cin >> num;
+		ll reduce = num-i;
+		m[reduce] += num;
 	}
 
-	ll ans = min(currVal, currValRev);
-	if(ans == INF) ans = -1;
+	for(auto &it : m) {
+		ans = max(ans, it.se);
+	}
+
 	p1(ans);
 }
 
 
-int main()
-{
+int main() {
+
 	fastio;
 
     #ifndef ONLINE_JUDGE

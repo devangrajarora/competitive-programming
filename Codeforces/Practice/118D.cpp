@@ -2,7 +2,7 @@
 using namespace std;
 #define ll long long
 #define ld long double
-#define MOD 1000000007
+#define MOD 100000000
 #define fi first
 #define se second
 #define rep(i,n) for(ll i = 0 ; i < n ; i++)
@@ -14,6 +14,7 @@ using namespace std;
 #define endl "\n"
 #define vi vector<ll>
 #define vvi vector<vi>
+#define vvvi vector<vvi>
 #define pii pair <ll,ll>
 #define fastio ios_base::sync_with_stdio(false);cin.tie(NULL)
 #define p0(a) cout << a << " "
@@ -47,50 +48,27 @@ using namespace std;
 
 // read once, read again, think, code
 
-#define INF 1e14+1
+ll dp[101][101][11][11];
+ll K1, K2;
 
-string rev(string s) {
-	reverse(s.begin(), s.end());
-	return s;
-}
+ll beautifulArrangements(ll n1, ll n2, ll k1, ll k2) {
+
+	if(!n1 and !n2) return 1;
+	if(dp[n1][n2][k1][k2] != -1) return dp[n1][n2][k1][k2];
+
+	ll place1 = (n1 > 0 and k1 > 0) ? beautifulArrangements(n1-1,n2,k1-1,K2) : 0;
+	ll place2 = (n2 > 0 and k2 > 0) ? beautifulArrangements(n1,n2-1,K1,k2-1) : 0;
+
+	return dp[n1][n2][k1][k2] = (place1 + place2) % MOD;
+} 
 
 void solve() {
 
-	ll n; cin >> n;
-	vi c(n);
-	rep(i,n) cin >> c[i];
-
-	// dp[i][0] -> cost of sorting first i strings when ith string is not reversed    
-	// dp[i][1] -> cost of sorting first i strings when ith string is reversed    
-
-	ll prevVal = 0, currVal;
-	ll prevValRev = c[0], currValRev;
-
-	string prev, curr, currRev; cin >> prev;
-	string prevRev = rev(prev);
-
-	repb(i,1,n) {
-		cin >> curr;
-		currRev = rev(curr);
-
-		ll op1 = (curr >= prev) ? prevVal : INF;
-		ll op2 = (curr >= prevRev) ? prevValRev : INF;
-
-		ll op3 = (currRev >= prev) ? prevVal + c[i] : INF;
-		ll op4 = (currRev >= prevRev) ? prevValRev + c[i] : INF;
-
-		currVal = min(op1, op2);
-		currValRev = min(op3, op4);
-
-		prevVal = currVal;
-		prevValRev = currValRev;
-		prev = curr;
-		prevRev = currRev;
-	}
-
-	ll ans = min(currVal, currValRev);
-	if(ans == INF) ans = -1;
-	p1(ans);
+	memset(dp, -1, sizeof(dp));
+    ll n1, n2, k1, k2; cin >> n1 >> n2 >> k1 >> k2;
+    K1 = k1, K2 = k2;
+    ll ans = beautifulArrangements(n1,n2,k1,k2);
+    p1(ans);
 }
 
 

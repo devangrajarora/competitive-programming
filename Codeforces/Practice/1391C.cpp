@@ -47,49 +47,15 @@ using namespace std;
 
 // read once, read again, think, code
 
-#define INF 1e14+1
-
-string rev(string s) {
-	reverse(s.begin(), s.end());
-	return s;
-}
-
 void solve() {
 
-	ll n; cin >> n;
-	vi c(n);
-	rep(i,n) cin >> c[i];
-
-	// dp[i][0] -> cost of sorting first i strings when ith string is not reversed    
-	// dp[i][1] -> cost of sorting first i strings when ith string is reversed    
-
-	ll prevVal = 0, currVal;
-	ll prevValRev = c[0], currValRev;
-
-	string prev, curr, currRev; cin >> prev;
-	string prevRev = rev(prev);
-
-	repb(i,1,n) {
-		cin >> curr;
-		currRev = rev(curr);
-
-		ll op1 = (curr >= prev) ? prevVal : INF;
-		ll op2 = (curr >= prevRev) ? prevValRev : INF;
-
-		ll op3 = (currRev >= prev) ? prevVal + c[i] : INF;
-		ll op4 = (currRev >= prevRev) ? prevValRev + c[i] : INF;
-
-		currVal = min(op1, op2);
-		currValRev = min(op3, op4);
-
-		prevVal = currVal;
-		prevValRev = currValRev;
-		prev = curr;
-		prevRev = currRev;
+	ll n, Nfac = 1, trees = 1; cin >> n;
+	repeb(i,1,n) {
+		Nfac = (Nfac * i) % MOD;
+		if(i < n) trees = (trees * 2) % MOD;
 	}
 
-	ll ans = min(currVal, currValRev);
-	if(ans == INF) ans = -1;
+	ll ans = Nfac - trees;
 	p1(ans);
 }
 

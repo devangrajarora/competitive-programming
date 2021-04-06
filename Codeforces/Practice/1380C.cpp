@@ -47,50 +47,38 @@ using namespace std;
 
 // read once, read again, think, code
 
-#define INF 1e14+1
-
-string rev(string s) {
-	reverse(s.begin(), s.end());
-	return s;
+ll nCr(ll n, ll r) { 
+    ll res = 1; 
+    if (r > n - r) {
+        r = n - r; 
+    }
+    rep(i,r) { 
+        res *= (n - i); 
+        res /= (i + 1); 
+    } 
+    return res; 
 }
+
 
 void solve() {
 
-	ll n; cin >> n;
-	vi c(n);
-	rep(i,n) cin >> c[i];
+    ll n, x, len = 1, ans = 0;
+    cin >> n >> x;
+    vi a(n);
+    rep(i,n) cin >> a[i];
+    sort(a.rbegin(), a.rend());
 
-	// dp[i][0] -> cost of sorting first i strings when ith string is not reversed    
-	// dp[i][1] -> cost of sorting first i strings when ith string is reversed    
+    rep(i,n) {
 
-	ll prevVal = 0, currVal;
-	ll prevValRev = c[0], currValRev;
+    	if(a[i]*len >= x) {
+    		ans++;
+    		len = 1;
+    	} else{
+    		len++;
+    	}
+    }
 
-	string prev, curr, currRev; cin >> prev;
-	string prevRev = rev(prev);
-
-	repb(i,1,n) {
-		cin >> curr;
-		currRev = rev(curr);
-
-		ll op1 = (curr >= prev) ? prevVal : INF;
-		ll op2 = (curr >= prevRev) ? prevValRev : INF;
-
-		ll op3 = (currRev >= prev) ? prevVal + c[i] : INF;
-		ll op4 = (currRev >= prevRev) ? prevValRev + c[i] : INF;
-
-		currVal = min(op1, op2);
-		currValRev = min(op3, op4);
-
-		prevVal = currVal;
-		prevValRev = currValRev;
-		prev = curr;
-		prevRev = currRev;
-	}
-
-	ll ans = min(currVal, currValRev);
-	if(ans == INF) ans = -1;
-	p1(ans);
+    p1(ans);
 }
 
 
@@ -103,7 +91,7 @@ int main()
         freopen("/home/devang/output.txt","w",stdout);
     #endif
 
-    //w(tc)
+    w(tc)
     	solve();
 	
 	return 0;
