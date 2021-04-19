@@ -1,7 +1,6 @@
 #include<bits/stdc++.h>
 using namespace std;
 #define ll long long
-#define ull unsigned long long
 #define ld long double
 #define MOD 1000000007
 #define fi first
@@ -48,40 +47,54 @@ using namespace std;
 
 // read once, read again, think, code
 
-ll f(vi &a, ll x, ll n) {
-
-	ll ans = 0, val = 1;
-	rep(i,n) {
-		ans += abs(a[i] - val);
-		val *= x;
-	}
-
-	return ans;
-}
-
 void solve() {
 
-	ll n, f1 = 0;
-	cin >> n;
+	ll n, sum = 0, mx = 0; cin >> n;
+	bool allsame = true;
 	vi a(n);
 	rep(i,n) {
 		cin >> a[i];
-		f1 += a[i]-1;
+		sum += a[i];
+		mx = max(mx, a[i]);
+		if(i > 0 and a[i] != a[i-1]) allsame = false; 
 	}
 
-	sort(a.begin(), a.end());
-
-	ll bestVal = f1, x = 2;
-
-	while(powl(x,n-1) <= f1 + a[n-1]) {
-
-		ll curr = f(a,x,n);
-		if(curr > bestVal) break;
-		bestVal = curr;
-		x++;
+	if(allsame) {
+		p1(0); return;
 	}
 
-	p1(bestVal);
+	int ok = 0;
+
+	for(ll parts = n-1 ; parts > 1 ; parts--) {
+		if(sum%parts != 0) continue;
+		ll subarraySum = sum / parts;
+		if(mx > subarraySum) continue;
+
+		ll k = parts, currsum = 0;
+		rep(i,n) {
+			if(currsum == subarraySum) {
+				k--;
+				currsum = a[i];
+			} else {
+				if(currsum + a[i] > subarraySum) break;
+				currsum += a[i];
+			}
+		}
+
+		if(currsum == subarraySum) {
+				k--;
+		}
+
+
+		if(k == 0) {
+			p1(n-parts);
+			ok = 1;
+			return;
+		}
+	}
+
+		p1(n-1);
+	
 }
 
 
@@ -94,7 +107,7 @@ int main()
         freopen("/home/devang/output.txt","w",stdout);
     #endif
 
-    //w(tc)
+    w(tc)
     	solve();
 	
 	return 0;

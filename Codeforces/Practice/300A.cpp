@@ -32,64 +32,50 @@ inline std::ostream& operator << (std::ostream& os, const std::pair<T1, T2>& p)
 inline std::ostream &operator << (std::ostream & os,const std::vector<T>& v)
 {
 	bool first = true;
-	os << "[";
 	for(unsigned int i = 0; i < v.size(); i++)
 	{
 		if(!first)
-			os << ", ";
+			os << " ";
 		os << v[i];
 		first = false;
 	}
-	return os << "]";
+	return os;
 }
 
 /*-------------------------------------------------*/
 
 // read once, read again, think, code
 
-// for every k*lcm take first b elements
-
-void solve1() {
-	ll a, b, q; cin >> a >> b >> q;
-
-	while(q--) {
-		
-		ll l, r; cin >> l >> r;
-		repeb(i,l,r) {
-			if(i%a%b == i%b%a) p1(i);
-		}
-	} 
-
-
-}
-
 void solve() {
 
-	ll a, b, q; cin >> a >> b >> q;
-	if(a > b) swap(a,b);
-	ll lcm = (a*b)/__gcd(a,b);
+	ll n, num, negs = 0; cin >> n;
+	vi neg, zero, pos, a(n);
 
-	while(q--) {
-		
-		ll l, r; cin >> l >> r;
-		ll left = l / lcm * lcm;
-		ll right = r / lcm * lcm;
-		ll val = 0;
+	rep(i,n) {
+		cin >> a[i];
+		if(a[i] < 0)negs++;
+	}
 
-		// watch(lcm);
-		// p2(left, right);
+	negs--;
+	bool putAllInPos = negs%2==0;
 
-		val += min(r-right+1,b);
-		val += max(0ll, left+b-l);
-		left += lcm;
-		val += (right - left) / lcm * b;
-		
+	rep(i,n) {
+		if(a[i] == 0) zero.pb(a[i]);
+		else if(a[i] < 0 and neg.empty()) neg.pb(a[i]);
+		else {
+			if(a[i] < 0 and !putAllInPos) {
+				zero.pb(a[i]);
+				putAllInPos = true;
+			} else {
+				pos.pb(a[i]);
+			}
+			
+		}	
+	}
 
-		ll ans = (r-l+1) - val;
-		p0(ans);
-	} 
-
-	p1("");
+	p0(neg.size()); p1(neg);
+	p0(pos.size()); p1(pos);
+	p0(zero.size()); p1(zero);
 }
 
 
@@ -102,7 +88,7 @@ int main()
 	freopen("/home/devang/output.txt","w",stdout);
     #endif
 
-	w(tc)
+    //w(tc)
 	solve();
 	
 	return 0;

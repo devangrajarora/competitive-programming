@@ -1,6 +1,7 @@
 #include<bits/stdc++.h>
 using namespace std;
 #define ll long long
+#define ld long double
 #define MOD 1000000007
 #define fi first
 #define se second
@@ -22,44 +23,41 @@ using namespace std;
 #define w(x) ll x; cin>>x; while(x--)
 
     template <typename T1, typename T2>
-inline std::ostream& operator << (std::ostream& os, const std::pair<T1, T2>& p)
-{
-	return os << "(" << p.first << ", " << p.second << ")";
-}
-
+    inline std::ostream& operator << (std::ostream& os, const std::pair<T1, T2>& p)
+    {
+        return os << "(" << p.first << ", " << p.second << ")";
+    }
+ 
     template<typename T>
-inline std::ostream &operator << (std::ostream & os,const std::vector<T>& v)
-{
-	bool first = true;
-	os << "[";
-	for(unsigned int i = 0; i < v.size(); i++)
-	{
-		if(!first)
-			os << ", ";
-		os << v[i];
-		first = false;
-	}
-	return os << "]";
-}
-
+    inline std::ostream &operator << (std::ostream & os,const std::vector<T>& v)
+    {
+        bool first = true;
+        os << "[";
+        for(unsigned int i = 0; i < v.size(); i++)
+        {
+            if(!first)
+                os << ", ";
+            os << v[i];
+            first = false;
+        }
+        return os << "]";
+    }
+    
 /*-------------------------------------------------*/
 
 // read once, read again, think, code
 
 void solve() {
 
-	ll n,m,k; cin >> n >> m >> k;
-	ll add = 2, ans = 0, mn = min(n,m);
-	repeb(i,1,m) {
-		ll cnt = min(i,n);
-		if(cnt%2) ans ^= (k+i+1);
-	}
-
-	repeb(i,2,n) {
-		ll cnt = min(m,n-i+1);
-		if(cnt%2) ans ^= (k+m+i);
-	}
+	ll n, m, k, ans = 0;
+	cin >> n >> m >> k;
 	
+	for(ll x = 2 ; x <= n+m ; x++) {
+		ll st = max(1ll,x-m);
+		ll en = min(n,x-1);
+		ll d = en - st + 1;
+		if(d%2) ans ^= (k+x);
+	}
 
 	p1(ans);
 }
@@ -70,12 +68,12 @@ int main()
 	fastio;
 
     #ifndef ONLINE_JUDGE
-	freopen("/home/devang/input.txt","r",stdin);
-	freopen("/home/devang/output.txt","w",stdout);
+        freopen("/home/devang/input.txt","r",stdin);
+        freopen("/home/devang/output.txt","w",stdout);
     #endif
 
-	w(tc)
-	solve();
+    w(tc)
+    	solve();
 	
 	return 0;
 }

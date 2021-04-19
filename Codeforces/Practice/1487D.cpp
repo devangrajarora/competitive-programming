@@ -47,49 +47,24 @@ inline std::ostream &operator << (std::ostream & os,const std::vector<T>& v)
 
 // read once, read again, think, code
 
-// for every k*lcm take first b elements
-
-void solve1() {
-	ll a, b, q; cin >> a >> b >> q;
-
-	while(q--) {
-		
-		ll l, r; cin >> l >> r;
-		repeb(i,l,r) {
-			if(i%a%b == i%b%a) p1(i);
-		}
-	} 
-
-
-}
+vector<ll> c;
 
 void solve() {
 
-	ll a, b, q; cin >> a >> b >> q;
-	if(a > b) swap(a,b);
-	ll lcm = (a*b)/__gcd(a,b);
+	ll x; cin >> x;
+	ll l = 0 , r = c.size()-1, pos;
 
-	while(q--) {
-		
-		ll l, r; cin >> l >> r;
-		ll left = l / lcm * lcm;
-		ll right = r / lcm * lcm;
-		ll val = 0;
+	while(l <= r) {
+		ll mid = (l+r)/2;
+		if(c[mid] > x) {
+			r = mid-1;
+		} else {
+			pos = mid;
+			l = mid + 1;
+		}
+	}
 
-		// watch(lcm);
-		// p2(left, right);
-
-		val += min(r-right+1,b);
-		val += max(0ll, left+b-l);
-		left += lcm;
-		val += (right - left) / lcm * b;
-		
-
-		ll ans = (r-l+1) - val;
-		p0(ans);
-	} 
-
-	p1("");
+	p1(pos);
 }
 
 
@@ -102,8 +77,16 @@ int main()
 	freopen("/home/devang/output.txt","w",stdout);
     #endif
 
-	w(tc)
-	solve();
-	
+
+	for(ll a = 1 ; a <= 100000 ; a += 2) {
+		if((a*a + 1) % 2 == 0) {
+			c.pb((a*a + 1) / 2);
+		}
+	}
+
+	w(tc){
+		solve();
+	}
+
 	return 0;
 }

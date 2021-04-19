@@ -47,49 +47,45 @@ inline std::ostream &operator << (std::ostream & os,const std::vector<T>& v)
 
 // read once, read again, think, code
 
-// for every k*lcm take first b elements
+const int MAXM = 1e6+1;
+vi fac(MAXM);
+ll a,b,n;
 
-void solve1() {
-	ll a, b, q; cin >> a >> b >> q;
+bool good(ll num) {
+	while(num) {
+		int digit = num%10;
+		if(digit != a and digit != b) return false;
+		num /= 10;
+	}
 
-	while(q--) {
-		
-		ll l, r; cin >> l >> r;
-		repeb(i,l,r) {
-			if(i%a%b == i%b%a) p1(i);
-		}
-	} 
+	return true;
+}
+
+ll modPower(ll num,ll r) {
+    if(r==0) return 1;
+    if(r==1) return num%MOD;
+    ll ans=modPower(num,r/2)%MOD;
+    if(r%2==0) {
+        return (ans*ans)%MOD;
+    } return (((ans*ans)%MOD)*num)%MOD;
+}
 
 
+ll inv(ll a) {
+	return modPower(a,MOD-2);
 }
 
 void solve() {
 
-	ll a, b, q; cin >> a >> b >> q;
-	if(a > b) swap(a,b);
-	ll lcm = (a*b)/__gcd(a,b);
-
-	while(q--) {
-		
-		ll l, r; cin >> l >> r;
-		ll left = l / lcm * lcm;
-		ll right = r / lcm * lcm;
-		ll val = 0;
-
-		// watch(lcm);
-		// p2(left, right);
-
-		val += min(r-right+1,b);
-		val += max(0ll, left+b-l);
-		left += lcm;
-		val += (right - left) / lcm * b;
-		
-
-		ll ans = (r-l+1) - val;
-		p0(ans);
+	ll ans = 0; cin >> a >> b >> n;
+	repe(i,n) {
+		ll num = a*i + b*(n-i);
+		if(good(num)) {
+			ans = (ans + (fac[n] * inv(fac[i] * fac[n-i] % MOD) ) % MOD ) % MOD;
+		}
 	} 
 
-	p1("");
+	p1(ans);
 }
 
 
@@ -102,7 +98,11 @@ int main()
 	freopen("/home/devang/output.txt","w",stdout);
     #endif
 
-	w(tc)
+	fac[0] = fac[1] = 1;
+	for(ll i = 2 ; i < MAXM ; i++) {
+		fac[i] = (i * fac[i-1]) % MOD;
+	}
+
 	solve();
 	
 	return 0;

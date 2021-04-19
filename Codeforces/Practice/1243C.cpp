@@ -1,7 +1,6 @@
 #include<bits/stdc++.h>
 using namespace std;
 #define ll long long
-#define ull unsigned long long
 #define ld long double
 #define MOD 1000000007
 #define fi first
@@ -48,40 +47,42 @@ using namespace std;
 
 // read once, read again, think, code
 
-ll f(vi &a, ll x, ll n) {
-
-	ll ans = 0, val = 1;
-	rep(i,n) {
-		ans += abs(a[i] - val);
-		val *= x;
-	}
-
-	return ans;
-}
-
 void solve() {
 
-	ll n, f1 = 0;
-	cin >> n;
-	vi a(n);
-	rep(i,n) {
-		cin >> a[i];
-		f1 += a[i]-1;
-	}
+    ll n, primes = 0, x; cin >> n;
+    unordered_map<ll, ll> m;
+    m.reserve(1<<10);
+    m.max_load_factor(0.25);
 
-	sort(a.begin(), a.end());
+    ll num = n;
 
-	ll bestVal = f1, x = 2;
+    for(ll i = 2 ; i*i <= n ; i++) {
+    	if(n%i==0) {
+    		primes++;
+    		x = i;
+    		while(n%i==0) {
+    			m[i]++;
+    			n /= i;
+    		}
+    	}
 
-	while(powl(x,n-1) <= f1 + a[n-1]) {
+    }
 
-		ll curr = f(a,x,n);
-		if(curr > bestVal) break;
-		bestVal = curr;
-		x++;
-	}
+    if(primes == 0) {
+    	p1(n); return;
+    }
 
-	p1(bestVal);
+    if(n > 1) {
+    	primes++;
+    	m[n]++;
+    	x = n;
+    }
+
+    if(primes == 1) {
+    	p1(x);
+    } else {
+    	p1(1);
+    }
 }
 
 

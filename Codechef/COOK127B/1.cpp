@@ -1,6 +1,7 @@
 #include<bits/stdc++.h>
 using namespace std;
 #define ll long long
+#define ld long double
 #define MOD 1000000007
 #define fi first
 #define se second
@@ -22,59 +23,65 @@ using namespace std;
 #define w(x) ll x; cin>>x; while(x--)
 
     template <typename T1, typename T2>
-    inline std::ostream& operator << (std::ostream& os, const std::pair<T1, T2>& p)
-    {
-        return os << "(" << p.first << ", " << p.second << ")";
-    }
- 
+inline std::ostream& operator << (std::ostream& os, const std::pair<T1, T2>& p)
+{
+	return os << "(" << p.first << ", " << p.second << ")";
+}
+
     template<typename T>
-    inline std::ostream &operator << (std::ostream & os,const std::vector<T>& v)
-    {
-        bool first = true;
-        os << "[";
-        for(unsigned int i = 0; i < v.size(); i++)
-        {
-            if(!first)
-                os << ", ";
-            os << v[i];
-            first = false;
-        }
-        return os << "]";
-    }
-    
+inline std::ostream &operator << (std::ostream & os,const std::vector<T>& v)
+{
+	bool first = true;
+	os << "[";
+	for(unsigned int i = 0; i < v.size(); i++)
+	{
+		if(!first)
+			os << ", ";
+		os << v[i];
+		first = false;
+	}
+	return os << "]";
+}
+
 /*-------------------------------------------------*/
 
 // read once, read again, think, code
 
+#define FLUSH fflush(stdin); fflush(stdout)
+vi squares;
+
 void solve() {
 
-    ll ans = 1, res = 0;
+	FLUSH;
+	int ip;
 
-    while(res == 0) {
-    	p1((ans * ans));
-    	cin.clear();
-		fflush(stdin);
-		fflush(stdout);
-    	ans++;
-    	// fflush(stdin);
-    	cin >> res;
-    	if(res == 1) break;
-    	if(res == -1) exit(0);
-    }
+	for(auto num : squares) {
+		p1(num);
+		FLUSH;
+		cin >> ip;
+		if(ip == 1) return;
+		if(ip == -1) exit(0);
+	}
 }
 
 
 int main()
 {
-	fastio;
 
     #ifndef ONLINE_JUDGE
-        freopen("/home/devang/input.txt","r",stdin);
-        freopen("/home/devang/output.txt","w",stdout);
+	freopen("/home/devang/input.txt","r",stdin);
+	freopen("/home/devang/output.txt","w",stdout);
     #endif
 
-    w(tc)
-    	solve();
+	for(int i = 1 ; i <= 1000 ; i++) {
+		squares.pb(i*i);
+	}
+
+	FLUSH;
+
+	w(tc) {
+		solve();
+	}
 	
 	return 0;
 }

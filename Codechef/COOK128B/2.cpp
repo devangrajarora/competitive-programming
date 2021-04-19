@@ -1,7 +1,6 @@
 #include<bits/stdc++.h>
 using namespace std;
 #define ll long long
-#define ull unsigned long long
 #define ld long double
 #define MOD 1000000007
 #define fi first
@@ -13,13 +12,14 @@ using namespace std;
 #define rfor(i,n,a) for(ll i = n ; i >= a ; i--)
 #define pb push_back
 #define endl "\n"
-#define vi vector<ll>
+#define vi vector<int>
 #define vvi vector<vi>
 #define pii pair <ll,ll>
 #define fastio ios_base::sync_with_stdio(false);cin.tie(NULL)
 #define p0(a) cout << a << " "
 #define p1(a) cout << a << endl
 #define p2(a,b) cout << a << " " << b << endl
+#define p3(a,b,c) cout << a << " " << b << " " << c << endl
 #define watch(x) cout << (#x) << " is " << (x) << endl
 #define w(x) ll x; cin>>x; while(x--)
 
@@ -33,55 +33,86 @@ using namespace std;
     inline std::ostream &operator << (std::ostream & os,const std::vector<T>& v)
     {
         bool first = true;
-        os << "[";
         for(unsigned int i = 0; i < v.size(); i++)
         {
             if(!first)
-                os << ", ";
+                os << " ";
             os << v[i];
             first = false;
         }
-        return os << "]";
+        return os;
     }
     
 /*-------------------------------------------------*/
 
 // read once, read again, think, code
 
-ll f(vi &a, ll x, ll n) {
+void buildTree(vi &a, vi &seg, int l, int r, int pos) {
 
-	ll ans = 0, val = 1;
-	rep(i,n) {
-		ans += abs(a[i] - val);
-		val *= x;
+	if(l == r) {
+		seg[pos] = a[l];
+	} else {
+
+		int mid = l + (r-l)/2;
+		buildTree(a,seg,l,mid,2*pos+1);
+		buildTree(a,seg,mid+1,r,2*pos+2);
+		seg[pos] = seg[2*pos+1] | seg[2*pos+2];
+	}
+}
+
+int query(vi &seg, int l, int r, int pos, int ql, int qr) {
+
+	if(ql > r || qr < l) { // no overlap
+		return 0;
+	}else if(ql <= l && qr >= r) { // total overlap
+		return seg[pos];
+	} else {
+
+		int mid = l + (r-l)/2;
+		int left = query(seg,l,mid,2*pos+1,ql,qr);
+		int right = query(seg,mid+1,r,2*pos+2,ql,qr);
+		return left | right;
+	}
+}
+
+void update(vi &seg, vi &a, int index, int val, int l, int r, int pos) {
+
+	if(l == r) {
+		a[index] = val;
+		seg[pos] = val;
+	} else {
+		int mid = l + (r-l)/2;
+		
+		if(l <= index && index <= mid) {
+			update(seg,a,index,val,l,mid,2*pos+1);
+		} else {
+			update(seg,a,index,val,mid+1,r,2*pos+2);
+		}
+
+		seg[pos] = seg[2*pos+1] | seg[2*pos+2];
 	}
 
-	return ans;
 }
 
 void solve() {
 
-	ll n, f1 = 0;
-	cin >> n;
-	vi a(n);
-	rep(i,n) {
-		cin >> a[i];
-		f1 += a[i]-1;
+	ll n, q, x, v;
+	cin >> n >> q;
+
+	vi a(n), segOR(4*n);
+    
+    rep(i,n) cin >> a[i];
+
+	buildTree(a,segOR,0,n-1,0);
+	cout << segOR[0] << "\n";
+
+	rep(i,q) {
+		cin >> x >> v;
+		x--;
+		update(segOR,a,x,v,0,n-1,0);
+		cout << segOR[0] << "\n";
 	}
 
-	sort(a.begin(), a.end());
-
-	ll bestVal = f1, x = 2;
-
-	while(powl(x,n-1) <= f1 + a[n-1]) {
-
-		ll curr = f(a,x,n);
-		if(curr > bestVal) break;
-		bestVal = curr;
-		x++;
-	}
-
-	p1(bestVal);
 }
 
 
@@ -90,12 +121,13 @@ int main()
 	fastio;
 
     #ifndef ONLINE_JUDGE
-        freopen("/home/devang/input.txt","r",stdin);
-        freopen("/home/devang/output.txt","w",stdout);
+    freopen("/home/devang/input.txt","r",stdin);
+    freopen("/home/devang/output.txt","w",stdout);
     #endif
 
-    //w(tc)
+    w(tc) {
     	solve();
+    }
 	
 	return 0;
 }

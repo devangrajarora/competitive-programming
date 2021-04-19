@@ -1,7 +1,6 @@
 #include<bits/stdc++.h>
 using namespace std;
 #define ll long long
-#define ull unsigned long long
 #define ld long double
 #define MOD 1000000007
 #define fi first
@@ -48,40 +47,63 @@ using namespace std;
 
 // read once, read again, think, code
 
-ll f(vi &a, ll x, ll n) {
+void buildTree(vi &a, vi &seg, int l, int r, int pos) {
 
-	ll ans = 0, val = 1;
-	rep(i,n) {
-		ans += abs(a[i] - val);
-		val *= x;
+	if(l == r) {
+		seg[pos] = l;
+	} else {
+
+		int mid = l + (r-l)/2;
+		buildTree(a,seg,l,mid,2*pos+1);
+		buildTree(a,seg,mid+1,r,2*pos+2);
+		ll minIdx = (a[seg[2*pos+1]] < a[seg[2*pos+2]]) ? seg[2*pos+1] : seg[2*pos+2]; 
+		seg[pos] = minIdx;
 	}
+}
 
-	return ans;
+int query(vi &seg, int l, int r, int pos, int ql, int qr, vi &a) {
+
+	if(ql > r || qr < l) { // no overlap
+		return -1;
+	}else if(ql <= l && qr >= r) { // total overlap
+		return seg[pos];
+	} else {
+
+		int mid = l + (r-l)/2;
+		int left = query(seg,l,mid,2*pos+1,ql,qr,a);
+		int right = query(seg,mid+1,r,2*pos+2,ql,qr,a);
+
+		if(left == -1 and right == -1) return -1;
+		else if(left == -1) return right;
+		else if(right == -1) return left;
+		else return (a[left] < a[right]) ? left : right;
+	}
+}
+
+void findMin(vi &a, ll l, ll r, ll &ans, vi &seg, ll n) {
+
+	if(l > r) return;
+
+	ll minIdx = query(seg,0,n-1,0,l,r,a);
+	ll minEle = a[minIdx];
+	ans += (minIdx-l+1) * (r-minIdx+1) * minEle;
+
+	findMin(a,l,minIdx-1,ans,seg,n);
+	findMin(a,minIdx+1,r,ans,seg,n);
 }
 
 void solve() {
 
-	ll n, f1 = 0;
-	cin >> n;
-	vi a(n);
-	rep(i,n) {
-		cin >> a[i];
-		f1 += a[i]-1;
-	}
+    ll n; cin >> n;
+    vi a(n), seg(4*n);
+    rep(i,n) cin >> a[i];
 
-	sort(a.begin(), a.end());
+    buildTree(a,seg,0,n-1,0);
+    
+    ll ans = 0;
 
-	ll bestVal = f1, x = 2;
-
-	while(powl(x,n-1) <= f1 + a[n-1]) {
-
-		ll curr = f(a,x,n);
-		if(curr > bestVal) break;
-		bestVal = curr;
-		x++;
-	}
-
-	p1(bestVal);
+    findMin(a,0,n-1,ans,seg,n);
+    p1(ans);
 }
 
 

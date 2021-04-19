@@ -1,7 +1,6 @@
 #include<bits/stdc++.h>
 using namespace std;
 #define ll long long
-#define ull unsigned long long
 #define ld long double
 #define MOD 1000000007
 #define fi first
@@ -33,55 +32,33 @@ using namespace std;
     inline std::ostream &operator << (std::ostream & os,const std::vector<T>& v)
     {
         bool first = true;
-        os << "[";
         for(unsigned int i = 0; i < v.size(); i++)
         {
             if(!first)
-                os << ", ";
+                os << " ";
             os << v[i];
             first = false;
         }
-        return os << "]";
+        return os;
     }
     
 /*-------------------------------------------------*/
 
 // read once, read again, think, code
 
-ll f(vi &a, ll x, ll n) {
-
-	ll ans = 0, val = 1;
-	rep(i,n) {
-		ans += abs(a[i] - val);
-		val *= x;
-	}
-
-	return ans;
-}
-
 void solve() {
 
-	ll n, f1 = 0;
-	cin >> n;
-	vi a(n);
+	ll n; cin >> n;
+	vi a(n), ans(n);
 	rep(i,n) {
 		cin >> a[i];
-		f1 += a[i]-1;
 	}
 
-	sort(a.begin(), a.end());
+	int k = 0;
+	rep(i,n) if(a[i]%2) ans[k++] = a[i];
+	rep(i,n) if(a[i]%2==0) ans[k++] = a[i];
+	p1(ans);
 
-	ll bestVal = f1, x = 2;
-
-	while(powl(x,n-1) <= f1 + a[n-1]) {
-
-		ll curr = f(a,x,n);
-		if(curr > bestVal) break;
-		bestVal = curr;
-		x++;
-	}
-
-	p1(bestVal);
 }
 
 
@@ -94,7 +71,7 @@ int main()
         freopen("/home/devang/output.txt","w",stdout);
     #endif
 
-    //w(tc)
+    w(tc)
     	solve();
 	
 	return 0;

@@ -1,7 +1,6 @@
 #include<bits/stdc++.h>
 using namespace std;
 #define ll long long
-#define ull unsigned long long
 #define ld long double
 #define MOD 1000000007
 #define fi first
@@ -48,40 +47,31 @@ using namespace std;
 
 // read once, read again, think, code
 
-ll f(vi &a, ll x, ll n) {
-
-	ll ans = 0, val = 1;
-	rep(i,n) {
-		ans += abs(a[i] - val);
-		val *= x;
-	}
-
-	return ans;
-}
-
 void solve() {
 
-	ll n, f1 = 0;
-	cin >> n;
-	vi a(n);
-	rep(i,n) {
-		cin >> a[i];
-		f1 += a[i]-1;
-	}
+    ll n, ans = 0; cin >> n;
+    vi a(n), nextSmallest(n);
+    rep(i,n) cin >> a[i];
+    stack<ll> s;
 
-	sort(a.begin(), a.end());
+    rfor(i,n-1,0) {
+    	while(!s.empty() and a[s.top()] > a[i]) s.pop();
+    	nextSmallest[i] = (s.empty()) ? n : s.top();
+    	s.push(i);
+    }
 
-	ll bestVal = f1, x = 2;
+    // dp[i] -> sum of minimum elements of all subarrays starting from i 
 
-	while(powl(x,n-1) <= f1 + a[n-1]) {
+    vi dp(n+1);
+    dp[n] = 0;
 
-		ll curr = f(a,x,n);
-		if(curr > bestVal) break;
-		bestVal = curr;
-		x++;
-	}
+    rfor(i,n-1,0) {
+    	ll nextSmallestIdx = nextSmallest[i];
+    	dp[i] = (nextSmallestIdx - i) * a[i] + dp[nextSmallestIdx];
+    	ans += dp[i];
+    }
 
-	p1(bestVal);
+    p1(ans);
 }
 
 

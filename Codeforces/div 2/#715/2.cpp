@@ -1,7 +1,6 @@
 #include<bits/stdc++.h>
 using namespace std;
 #define ll long long
-#define ull unsigned long long
 #define ld long double
 #define MOD 1000000007
 #define fi first
@@ -48,40 +47,38 @@ using namespace std;
 
 // read once, read again, think, code
 
-ll f(vi &a, ll x, ll n) {
+int solve() {
 
-	ll ans = 0, val = 1;
-	rep(i,n) {
-		ans += abs(a[i] - val);
-		val *= x;
-	}
+    ll n; cin >> n;
+    string s; cin >> s;
 
-	return ans;
-}
+    ll startingTs = n/3, endingTs = n/3, Ms = n/3;
+    ll waitingForM = 0, waitingForT = 0; 
 
-void solve() {
 
-	ll n, f1 = 0;
-	cin >> n;
-	vi a(n);
-	rep(i,n) {
-		cin >> a[i];
-		f1 += a[i]-1;
-	}
+    for(char c : s) {
+    	if(c == 'T') {
+    		if(startingTs > 0) {
+    			startingTs--; waitingForM++;
+    		} else {
+    			if(waitingForT > 0) {
+    				waitingForT--; endingTs--;
+    			} else {
+    				return 0;
+    			}
+    		}
+    	} else {
+    		if(waitingForM > 0) {
+    			Ms--; waitingForM--;
+    			waitingForT++;
+    		} else {
+    			return 0;
+    		}
+    	}
+    }
 
-	sort(a.begin(), a.end());
-
-	ll bestVal = f1, x = 2;
-
-	while(powl(x,n-1) <= f1 + a[n-1]) {
-
-		ll curr = f(a,x,n);
-		if(curr > bestVal) break;
-		bestVal = curr;
-		x++;
-	}
-
-	p1(bestVal);
+    if(waitingForT > 0 or waitingForM > 0) return 0;
+    return 1;
 }
 
 
@@ -94,8 +91,9 @@ int main()
         freopen("/home/devang/output.txt","w",stdout);
     #endif
 
-    //w(tc)
-    	solve();
+    w(tc) {
+    	(solve()) ? p1("YES") : p1("NO");
+    }
 	
 	return 0;
 }

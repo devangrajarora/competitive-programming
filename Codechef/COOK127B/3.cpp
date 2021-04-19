@@ -1,6 +1,7 @@
 #include<bits/stdc++.h>
 using namespace std;
 #define ll long long
+#define ld long double
 #define MOD 1000000007
 #define fi first
 #define se second
@@ -48,38 +49,29 @@ using namespace std;
 
 void solve() {
 
-    ll n,k, sum = 0, onesHere = 0, minOnes = INT_MAX;
+    ll n, k, sum = 0, currSum = 0;
     cin >> n >> k;
     vi a(n);
+
     rep(i,n) {
     	cin >> a[i];
-    	if(i < k) onesHere += a[i];
     	sum += a[i];
+    	if(i < k) currSum += a[i];
     }
 
-    if(k == 1) {
-    	p1(sum);
-    	return;
+
+    ll i = 1, best = currSum;
+    // watch(currSum);
+
+    while(i+k-1 < n) {
+    	ll newSum = currSum - a[i-1] + a[i+k-1];
+    	// watch(newSum);
+    	best = min(best, newSum);
+    	currSum = newSum;
+    	i++;
     }
 
-    if(k == n) {
-    	p1((sum*(sum+1))/2);
-    	return;
-    }
-
-    // watch(interval);
-
-    ll l = 1, r = k;
-    minOnes = onesHere;
-    while(r < n) {
-    	onesHere -= a[l-1];
-    	onesHere += a[r];
-    	if(onesHere < minOnes) minOnes = onesHere;
-    	l++, r++;
-    }
-
-    ll ans = (minOnes * (minOnes+1)) / 2;
-    ans += (sum - minOnes);
+    ll ans = sum - best + (best * (best + 1)) / 2;
     p1(ans);
 }
 
@@ -93,8 +85,9 @@ int main()
         freopen("/home/devang/output.txt","w",stdout);
     #endif
 
-    w(tc)
+    w(tc) {
     	solve();
+    }
 	
 	return 0;
 }

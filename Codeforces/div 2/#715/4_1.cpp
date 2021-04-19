@@ -1,7 +1,6 @@
 #include<bits/stdc++.h>
 using namespace std;
 #define ll long long
-#define ull unsigned long long
 #define ld long double
 #define MOD 1000000007
 #define fi first
@@ -48,40 +47,43 @@ using namespace std;
 
 // read once, read again, think, code
 
-ll f(vi &a, ll x, ll n) {
-
-	ll ans = 0, val = 1;
-	rep(i,n) {
-		ans += abs(a[i] - val);
-		val *= x;
-	}
-
-	return ans;
+int ord(char c) {
+    return c-'0';
 }
 
 void solve() {
 
-	ll n, f1 = 0;
-	cin >> n;
-	vi a(n);
-	rep(i,n) {
-		cin >> a[i];
-		f1 += a[i]-1;
-	}
+    ll n;
+    string s1, s2, s3;
+    cin >> n;
+    cin >> s1 >> s2 >> s3;
 
-	sort(a.begin(), a.end());
+    string ans = "";
 
-	ll bestVal = f1, x = 2;
+    ll p1 = 0, p2 = 0, p3 = 0;
 
-	while(powl(x,n-1) <= f1 + a[n-1]) {
+    while(max({p1,p2,p3}) < 2*n) {
 
-		ll curr = f(a,x,n);
-		if(curr > bestVal) break;
-		bestVal = curr;
-		x++;
-	}
+        int cnt = ord(s1[p1]) + ord(s2[p2]) + ord(s3[p3]);
+        int opt = (cnt >= 2) ? 1 : 0;
+        ans += to_string(opt);
+        if(ord(s1[p1]) == opt) p1++;
+        if(ord(s2[p2]) == opt) p2++;
+        if(ord(s3[p3]) == opt) p3++;
+    }
 
-	p1(bestVal);
+    if(p1 == 2*n) {
+        if(p2 > p3) while(p2 < 2*n) ans += s2[p2++];
+        else while(p3 < 2*n) ans += s3[p3++];
+    } else if(p2 == 2*n) {
+        if(p1 > p3) while(p1 < 2*n) ans += s1[p1++];
+        else while(p3 < 2*n) ans += s3[p3++];
+    } else if(p3 == 2*n) {
+        if(p1 > p2) while(p1 < 2*n) ans += s1[p1++];
+        else while(p2 < 2*n) ans += s2[p2++];
+    }
+
+    p1(ans);
 }
 
 
@@ -94,8 +96,9 @@ int main()
         freopen("/home/devang/output.txt","w",stdout);
     #endif
 
-    //w(tc)
+    w(tc) {
     	solve();
+    }
 	
 	return 0;
 }
