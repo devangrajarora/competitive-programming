@@ -12,13 +12,14 @@ using namespace std;
 #define rfor(i,n,a) for(ll i = n ; i >= a ; i--)
 #define pb push_back
 #define endl "\n"
-#define vi vector<ld>
+#define vi vector<ll>
 #define vvi vector<vi>
 #define pii pair <ll,ll>
 #define fastio ios_base::sync_with_stdio(false);cin.tie(NULL)
 #define p0(a) cout << a << " "
 #define p1(a) cout << a << endl
 #define p2(a,b) cout << a << " " << b << endl
+#define p3(a,b,c) cout << a << " " << b << " " << c << endl
 #define watch(x) cout << (#x) << " is " << (x) << endl
 #define w(x) ll x; cin>>x; while(x--)
 
@@ -32,73 +33,35 @@ using namespace std;
     inline std::ostream &operator << (std::ostream & os,const std::vector<T>& v)
     {
         bool first = true;
-        os << "[";
         for(unsigned int i = 0; i < v.size(); i++)
         {
             if(!first)
-                os << ", ";
+                os << " ";
             os << v[i];
             first = false;
         }
-        return os << "]";
+        return os;
     }
     
 /*-------------------------------------------------*/
 
 // read once, read again, think, code
 
-// constant space dp
-
-/*
-	double prevHappy = 1, prevSad = 0;
-
-	for(int i = 0 ; i < n ; i++) {
-		double currHappy = prevHappy * (1-p) + prevSad * p;
-		double currSad = prevSad * (1-p) + prevHappy * p;
-		prevHappy = currHappy; prevSad = currSad;
-	}
-*/
-
-vvi multiply2x2(vvi &a, vvi &b) {
-    vvi c(2, vi(2,0));
-    for(int i = 0 ; i < 2 ; i++) {
-        for(int j = 0 ; j < 2 ; j++) {
-            for(int k = 0 ; k < 2 ; k++) {
-                c[i][j] += a[i][k] * b[k][j];
-            }
-        }
-    }
-
-    return c;
-}
-
-vvi matrixPower(vvi &a, ll n) {
-    if(n == 1) return a;
-    vvi smallMatrix = matrixPower(a,n/2);
-    vvi result = multiply2x2(smallMatrix, smallMatrix);
-    if(n%2) {
-        result = multiply2x2(result, a);
-    }
-
-    return result;
-}
-
 void solve() {
 
-	ll n;
-	ld p;
-	cin >> n >> p;
-    
-	double prevHappy = 1, prevSad = 0;
+    ll n, k; cin >> n >> k;
+    vi a(n);
+    rep(i,n) cin >> a[i];
 
-	vvi a(2, vi(2));
-    a[0][0] = a[1][1] = 1-p;
-    a[0][1] = a[1][0] = p;
+    int idx = 0;
+    while(idx < n-1 and k > 0) {
+    	if(a[idx] == 0){ idx++; continue;}
+    	a[idx]--;
+    	k--;
+    	a[n-1]++;
+    }
 
-    vvi resultMatrix = matrixPower(a,n);
-    ld finalHappy =  resultMatrix[0][0];
-
-	cout << fixed << setprecision(12) << finalHappy;
+    p1(a);
 }
 
 
@@ -107,11 +70,11 @@ int main()
 	fastio;
 
     #ifndef ONLINE_JUDGE
-        freopen("/home/devang/input.txt","r",stdin);
-        freopen("/home/devang/output.txt","w",stdout);
+    freopen("/home/devang/input.txt","r",stdin);
+    freopen("/home/devang/output.txt","w",stdout);
     #endif
 
-    //w(tc)
+    w(tc)
     	solve();
 	
 	return 0;
