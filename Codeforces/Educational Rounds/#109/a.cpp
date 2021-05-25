@@ -42,22 +42,6 @@ using namespace std;
         }
         return os;
     }
-
-        template<typename T1, typename T2>
-    inline std::ostream &operator << (std::ostream & os,const std::map<T1, T2>& v)
-    {
-        bool first = true;
-        os << "[";
-        for (typename std::map<T1, T2>::const_iterator iii = v.begin(); iii != v.end(); ++iii)
-        {
-            if(!first)
-                os << ", ";
-            os << *iii ;
-            first = false;
-        }
-        return os << "]";
-    }
-
     
 /*-------------------------------------------------*/
 
@@ -65,37 +49,12 @@ using namespace std;
 
 void solve() {
 
-	ll n,q,num; cin >> n >> q;
+	ll k; cin >> k;
+	ll one = k, two = 100-k;
+	ll d  = __gcd(one,two);
+	ll ans = one/d + two/d;    
 
-	vector<map<int,int>> m(n+1);
-	
-	repeb(i,1,n) {
-		cin >> num;
-		m[i] = m[i-1];
-		m[i][num]++;
-	}
-
-	rep(i,q) {
-		ll l, r;
-		cin >> l >> r;
-		ll x = r-l+1, ok = 0;
-
-		map<int,int> curr;
-		for(auto &it : m[r]) {
-			curr[it.fi] = m[r][it.fi] - m[l-1][it.fi];
-			if(curr[it.fi] > ceil(x/2.0)) {
-				ll y = curr[it.fi];
-				ll rem = x-y;
-                ll onepiece = 2*rem+1;
-				ll ans = x-onepiece+1;
-				p1(ans); ok = 1; break;
-			}
-		}
-
-        if(ok) continue;
-		p1(1);
-	}
-
+	p1(ans);
 }
 
 
@@ -108,7 +67,7 @@ int main()
     freopen("/home/devang/output.txt","w",stdout);
     #endif
 
-    // w(tc)
+    w(tc)
     	solve();
 	
 	return 0;

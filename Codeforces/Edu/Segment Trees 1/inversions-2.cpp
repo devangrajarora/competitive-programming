@@ -47,102 +47,97 @@ using namespace std;
 
 // read once, read again, think, code
 
-const int MAXM = 3e5 + 5;
-
-vi mp[MAXM];
-
-ll cnt(int l, int r, ll num) {
-    return upper_bound(mp[num].begin(), mp[num].end(), r) - lower_bound(mp[num].begin(), mp[num].end(), l); 
-}
-
 struct SegmentTree {
-    
+	
     vi seg;
     ll sz, n;
 
     void init(ll n) {
         sz = 4*n;
         this -> n = n;
-        seg.assign(sz,0ll);
+        seg.resize(sz);
     }
 
-    void build(vi &a, int pos, int l, int r) {
+    void build(vi &a, ll pos, ll l, ll r) {
         if(l == r) {
-            seg[pos] = a[l];
+            seg[pos] = 1;
             return;
         }
 
-        ll mid = (l + r) / 2;
+        ll mid = (l + r)/2;
         build(a,2*pos+1,l,mid);
         build(a,2*pos+2,mid+1,r);
-
-        ll left = seg[2*pos+1], right = seg[2*pos+2];
-
-        seg[pos] =  (cnt(l,r,left) > cnt(l,r,right)) ? left : right;
+        seg[pos] = seg[2*pos+1] + seg[2*pos+2];
     }
 
     void build(vi &a) {
         build(a,0,0,n-1);
     }
 
-    ll query(ll pos, ll l, ll r, ll ql, ll qr) {
-        if(ql > r or qr < l) return 0;
-        if(ql <= l and r <= qr) return cnt(ql,qr,seg[pos]);
+    void update(vi &a, ll idx, ll pos, ll l, ll r) {
+        if(l == r) {
+            seg[pos] = 0;
+            a[idx] = 0;
+            return;
+        }
 
         ll mid = (l + r)/2;
-        ll lf = query(2*pos+1,l,mid,ql,qr);
-        ll rf = query(2*pos+2,mid+1,r,ql,qr);
-        return max(lf,rf);
+        if(idx <= mid) update(a,idx,2*pos+1,l,mid);
+        else update(a,idx,2*pos+2,mid+1,r);
+        seg[pos] = seg[2*pos+1] + seg[2*pos+2];
+    }
+
+    void update(vi &a, ll idx) {
+        update(a,idx,0,0,n-1);
+    }
+
+    ll query(ll k, ll pos, ll l, ll r) {
+        if(l == r and k == 1) {
+            return l;
+        }
+
+        ll mid = (l + r)/2;
+        ll rightOnes = seg[2*pos+2];
+        if(rightOnes >= k) return query(k,2*pos+2,mid+1,r);
+        else return query(k-rightOnes,2*pos+1,l,mid);
 
     }
 
-    ll query(ll ql, ll qr) {
-        return query(0,0,n-1,ql,qr);
+    ll query(ll k) {
+        return query(k,0,0,n-1);
     }
 
 };
 
-/*
-    seg.init(n);
-    seg.build(a);
-    seg.update(idx,num);
-    seg.query(ql,qr);
-*/
-
 void solve() {
 
-    ll n, q;
-    cin >> n >> q;
-
-    vi a(n);
-    rep(i,n) {
-        cin >> a[i];
-        mp[a[i]].pb(i);
-    }
-
+	ll n; cin >> n;
     SegmentTree seg;
     seg.init(n);
+
+    vi a(n,1);
     seg.build(a);
 
-    while(q--) {
-        ll l, r; cin >> l >> r;
-        l--; r--;
-        ll highestFreq = seg.query(l,r); // gets frequency of most frequent element
-        ll total = r-l+1;
-        ll rem = total-highestFreq;
-        ll onepiece = 2*rem+1;
-
-        bool superFrequent = (highestFreq > ceil(total/2.0)); // check if most frequent element is super frequent
-
-        ll ans = (superFrequent) ? (total - onepiece + 1) : 1;
-        p1(ans); 
+    vi onesFromRight(n), ans;
+    rep(i,n) {
+        cin >> onesFromRight[i];
+        onesFromRight[i]++;
     }
+
+    rfor(i,n-1,0) {
+        ll pos = seg.query(onesFromRight[i]);
+        ans.pb(pos+1);
+        seg.update(a,pos);
+    }
+
+    reverse(ans.begin(), ans.end());
+    p1(ans);
 }
 
 
 int main()
 {
-    fastio;
+	fastio;
 
     #ifndef ONLINE_JUDGE
     freopen("/home/devang/input.txt","r",stdin);
@@ -150,7 +145,7 @@ int main()
     #endif
 
     //w(tc)
-        solve();
-    
-    return 0;
+    	solve();
+	
+	return 0;
 }

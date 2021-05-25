@@ -2,7 +2,7 @@
 using namespace std;
 #define ll long long
 #define ld long double
-#define MOD 1000000007
+const int MOD = 1e9+7;
 #define fi first
 #define se second
 #define rep(i,n) for(ll i = 0 ; i < n ; i++)
@@ -27,18 +27,8 @@ typedef priority_queue<ll> maxheap;
 #define p4(a,b,c,d) cout << a << " " << b << " " << c << " " << d << endl
 #define sortv(v) sort(v.begin(),v.end())
 #define rsortv(v) sort(v.begin(),v.end(), greater<>());
-#define sortby(v,prop) sort( v.begin( ), v.end( ), [ ]( const auto& lhs, const auto& rhs ){ return lhs.prop < rhs.prop; });
-#define rsortby(v,prop) sort( v.begin( ), v.end( ), [ ]( const auto& lhs, const auto& rhs ){ return lhs.prop > rhs.prop; });
+#define watch(x) cout << (#x) << " is " << (x) << endl
 #define w(x)  ll x; cin>>x; while(x--)
-
-ll modPower(ll num,ll r) {
-	if(r==0) return 1;
-	if(r==1) return num%MOD;
-	ll ans=modPower(num,r/2)%MOD;
-	if(r%2==0) {
-		return (ans*ans)%MOD;
-	} return (((ans*ans)%MOD)*num)%MOD;
-}
 
     template <typename T1, typename T2>
     inline std::ostream& operator << (std::ostream& os, const std::pair<T1, T2>& p)
@@ -50,15 +40,14 @@ ll modPower(ll num,ll r) {
     inline std::ostream &operator << (std::ostream & os,const std::vector<T>& v)
     {
         bool first = true;
-        os << "[";
         for(unsigned int i = 0; i < v.size(); i++)
         {
             if(!first)
-                os << ", ";
+                os << " ";
             os << v[i];
             first = false;
         }
-        return os << "]";
+        return os;
     }
  
     template<typename T>
@@ -98,39 +87,74 @@ int dr8[] = {0,1,1,1,0,-1,-1,-1}, dc8[] = {1,1,0,-1,-1,-1,0,1};
 
 // read once, read again, think, code
 
-void solve() {
-
-    w(tc) {
-
-    	ll n, u, v;
-    	cin >> n;
-    	vi indegree(n,0);
-
-    	rep(i,n-1) {
-    		cin >> u >> v;
-    		indegree[v-1]++;
-    	}
-
-    	ll ans = 0;
-
-    	for(auto num : indegree) {
-    		ans += (num==0);
-    	}
-
-    	p1(ans-1);
-    }
-
+void cases(int tc) {
+	cout << "Case #" << tc << ": ";
 }
 
+ll modPower(ll num,ll r) {
+    if(r==0) return 1;
+    if(r==1) return num%MOD;
+    ll ans=modPower(num,r/2)%MOD;
+    if(r%2==0) {
+        return (ans*ans)%MOD;
+    } return (((ans*ans)%MOD)*num)%MOD;
+}
+
+
+void solve(int tc) {
+
+	ll n, k; cin >> n >> k;
+	string s;
+	cin >> s;
+	vi a;
+	ll val = -1;
+
+	int i = 0, j = n-1;
+	while(i <= j) {
+		ll cnt1 = (s[i]-'a')+1;
+		ll cnt2 = (s[j]-'a')+1;
+		ll num = cnt1;
+		if(cnt1 < cnt2) val = 0;
+		if(cnt1 > cnt2) val = -1;
+		a.pb(num);
+		i++; j--;
+	}
+
+	// watch(a);
+	// watch(val);
+
+	ll sz = a.size()-1, m = a.size(), ans = 0;
+
+	for(ll i = 0 ; i < m ; i++) {
+
+		ll num = a[i];
+		if(i == m-1) {
+			ans = (ans + num + val) % MOD;
+		} else {
+			ans = (ans + (((num-1) * modPower(k,sz)) % MOD)) % MOD;			
+		}
+
+		sz--;
+	}
+    cases(tc);
+    p1(ans);
+}
 
 int main()
 {
 	fastio;
 
     #ifndef ONLINE_JUDGE
-        freopen("input.txt","r",stdin);
-        // freopen("output.txt","w",stdin);
+    freopen("/home/devang/input.txt","r",stdin);
+    freopen("/home/devang/output.txt","w",stdout);
     #endif
-    solve();
+
+	int tc,x = 1;
+	cin >> tc;
+
+	while(tc--)	{
+		solve(x++);
+	}
+
 	return 0;
 }
