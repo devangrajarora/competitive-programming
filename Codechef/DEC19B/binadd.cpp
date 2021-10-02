@@ -1,12 +1,12 @@
 #include<bits/stdc++.h>
 using namespace std;
 
-	std::bitset<10000> to_bitset(std::string s)
+	bitset<10000> to_bitset(string s)
 	{
 		auto binary = [](char c) { return c == '0' || c == '1'; };
 		auto not_binary = [binary](char c) { return !binary(c); };
 
-		s.erase(std::remove_if(begin(s), end(s), not_binary), end(s));
+		s.erase(remove_if(begin(s), end(s), not_binary), end(s));
 
 		return std::bitset<10000>(s);
 	}
